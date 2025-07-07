@@ -20,7 +20,7 @@ WindowsAPIを容易に利用することができる機能を追加
 
 # 使用方法
 
-1. このプロジェクトを`ChCppBaseLibrary`の隣へCloneする
+1. このプロジェクトを`ChCppBaseLibrary`と`ChCpp_External_DirectXTex`の隣へCloneする
 2. `ChBaseLibrary.h`をインクルードする
 3. プロジェクトに紐づいている`StaticLibrary.zip`ファイルを展開する
 4. `StaticLibrary.zip`を展開する
