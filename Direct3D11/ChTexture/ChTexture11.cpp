@@ -26,7 +26,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include<Windows.h>
 
-#include"../../BaseIncluder/ChBase.h"
+#include"../../../ChCppBaseLibrary/BaseIncluder/ChBase.h"
 #include"../../BaseIncluder/ChD3D11I.h"
 
 #include"../ChDirectX11Controller/ChDirectX11Controller.h"
@@ -35,10 +35,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#include"../ChLight/ChLight11.h"
 #include"ChTexture11.h"
 
-
 #include<wincodec.h>
-#include"../../External/DirectXTex/DirectXTex/DirectXTex.h"
-#include"../../External/DirectXTex/WICTextureLoader/WICTextureLoader11.h"
+#include"../../../ChCpp_External_DirectXTex/DirectXTex/DirectXTex.h"
+#include"../../../ChCpp_External_DirectXTex/WICTextureLoader/WICTextureLoader11.h"
 
 #ifdef _DEBUG
 

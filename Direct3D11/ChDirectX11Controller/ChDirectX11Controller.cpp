@@ -1,9 +1,9 @@
 #include<Windows.h>
-#include"../../BaseIncluder/ChBase.h"
+#include"../../../ChCppBaseLibrary/BaseIncluder/ChBase.h"
 
 #include"../../BaseIncluder/ChD3D11I.h"
 
-#include"../../WindowsObject/WindObject/ChWindObject.h"
+#include"../../../ChCppWinLibrary/WindowsObject/WindObject/ChWindObject.h"
 #include"ChDirectX11Controller.h"
 
 using namespace ChD3D11;

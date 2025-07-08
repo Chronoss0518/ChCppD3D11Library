@@ -2,7 +2,7 @@
 #define Ch_D3D11_CB_Blur_h
 
 #include"../ChCBBase11.h"
-#include"../../../ShaderHeaderFiles/HLSL/5.0/Blur.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Blur.hlsli"
 
 namespace ChD3D11
 {

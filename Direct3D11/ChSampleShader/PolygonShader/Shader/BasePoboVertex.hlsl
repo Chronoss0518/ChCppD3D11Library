@@ -5,7 +5,7 @@
 
 #include"PolygonBase.hlsli"
 
-#include"../../../../ShaderHeaderFiles/HLSL/5.0/DrawPolygon.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/DrawPolygon.hlsli"
 
 //板ポリゴンバージョン//
 VS_OUT main(

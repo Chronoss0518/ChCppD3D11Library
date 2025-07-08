@@ -28,7 +28,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include<D3D11.h>
 
-#include"../../BasePack/ChStr.h"
+#include"../../../ChCppBaseLibrary/BasePack/ChStr.h"
 
 struct IWICBitmap;
 

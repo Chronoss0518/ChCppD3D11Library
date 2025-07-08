@@ -3,7 +3,7 @@
 
 #include"ChSamplePolygonShaderBase11.h"
 
-#include"../../../CPP/ChModel/ChModelObject.h"
+#include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
 #include"../../ChTexture/ChTexture11.h"
 #include"../../ChMesh/ChMesh11.h"

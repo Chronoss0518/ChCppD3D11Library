@@ -2,7 +2,7 @@
 #define Ch_D3D11_CB_CircleCulling_h
 
 #include"../ChCBBase11.h"
-#include"../../../ShaderHeaderFiles/HLSL/5.0/CircleCulling.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/CircleCulling.hlsli"
 
 namespace ChD3D11
 {

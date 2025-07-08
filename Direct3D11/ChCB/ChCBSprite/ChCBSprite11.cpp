@@ -1,10 +1,10 @@
 #include<Windows.h>
-#include"../../../BaseIncluder/ChBase.h"
+#include"../../../../ChCppBaseLibrary/BaseIncluder/ChBase.h"
 #include"../../../BaseIncluder/ChD3D11I.h"
 
 #include"../../ChTexture/ChTexture11.h"
 #include"ChCBSprite11.h"
-#include"../../../ShaderHeaderFiles/HLSL/5.0/Texture/BaseTexture.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Texture/BaseTexture.hlsli"
 
 using namespace ChD3D11;
 using namespace CB;

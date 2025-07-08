@@ -2,7 +2,8 @@
 #define Ch_D3D11_CB_Highlight_h
 
 #include"../ChCBBase11.h"
-#include"../../../ShaderHeaderFiles/HLSL/5.0/Highlight.hlsli"
+
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Highlight.hlsli"
 
 namespace ChD3D11
 {

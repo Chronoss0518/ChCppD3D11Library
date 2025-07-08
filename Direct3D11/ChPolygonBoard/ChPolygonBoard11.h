@@ -3,8 +3,8 @@
 
 #include"../ChShaderStructures11.h"
 
-#include"../../BasePack/Ch3D.h"
-#include"../../BasePack/ChPtr.h"
+#include"../../../ChCppBaseLibrary/BasePack/Ch3D.h"
+#include"../../../ChCppBaseLibrary/BasePack/ChPtr.h"
 
 #include<vector>
 

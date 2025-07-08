@@ -1,6 +1,6 @@
 
 #include<Windows.h>
-#include"../../BaseIncluder/ChBase.h"
+#include"../../../ChCppBaseLibrary/BaseIncluder/ChBase.h"
 #include"../../BaseIncluder/ChD3D11I.h"
 
 #include"ChPolygonBoard11.h"

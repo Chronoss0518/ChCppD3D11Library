@@ -4,8 +4,8 @@
 
 #include"PolygonBase.hlsli"
 
-#include"../../../../ShaderHeaderFiles/HLSL/5.0/DrawPolygon.hlsli"
-#include"../../../../ShaderHeaderFiles/HLSL/5.0/BoneBlending.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/DrawPolygon.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/BoneBlending.hlsli"
 
 //頂点シェーダ(VertexShader)//
 //通常描画//

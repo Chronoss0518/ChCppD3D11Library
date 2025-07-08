@@ -1,13 +1,13 @@
 #ifndef Ch_D3D11_Model_h
 #define Ch_D3D11_Model_h
 
-#include"../../CPP/ChBaseObject/ChBaseComponent.h"
-#include"../../CPP/ChModel/ChModelObject.h"
+#include"../../../ChCppBaseLibrary/CPP/ChBaseObject/ChBaseComponent.h"
+#include"../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 #include"../ChShaderStructures11.h"
 
 #include"../ChTexture/ChTexture11.h"
 
-#include"../../CPP/ChBaseObject/ChBaseObject.h"
+#include"../../../ChCppBaseLibrary/CPP/ChBaseObject/ChBaseObject.h"
 #include"../ChCB/ChCBBone/ChCBBone11.h"
 
 #include<string>
