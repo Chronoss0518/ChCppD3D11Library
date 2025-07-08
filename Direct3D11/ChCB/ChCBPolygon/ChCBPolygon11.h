@@ -2,7 +2,7 @@
 #define Ch_D3D11_CB_Polygon_h
 
 #include"../ChCBBase11.h"
-#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/DrawPolygon.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
 
 namespace ChD3D11
 {

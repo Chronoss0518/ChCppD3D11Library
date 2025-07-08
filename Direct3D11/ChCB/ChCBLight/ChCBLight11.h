@@ -2,7 +2,7 @@
 #define Ch_D3D11_CB_Light_h
 
 #include"../ChCBBase11.h"
-#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Light.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Light.hlsli"
 
 namespace ChD3D11
 {

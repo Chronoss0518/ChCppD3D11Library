@@ -3,7 +3,7 @@
 #define _SM5_0_
 
 #include"SpriteBase.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/DrawSprite.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawSprite.hlsli"
 
 //頂点シェダ(VertexShader)//
 //スプライトバージョン//

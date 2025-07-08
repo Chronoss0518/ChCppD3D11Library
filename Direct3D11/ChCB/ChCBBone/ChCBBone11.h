@@ -2,7 +2,7 @@
 #define Ch_D3D11_CB_Bone_h
 
 #include"../ChCBBase11.h"
-#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/BoneBlending.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/BoneBlending.hlsli"
 
 namespace ChD3D11
 {

@@ -1,7 +1,7 @@
 #ifndef	Ch_BasicShapes_h
 #define Ch_BasicShapes_h
 
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/BasicShapes.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/BasicShapes.hlsli"
 
 #ifndef BASIC_SHAPES_DATA_REGISTERNO
 #define BASIC_SHAPES_DATA_REGISTERNO 0

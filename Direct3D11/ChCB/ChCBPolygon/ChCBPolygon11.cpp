@@ -4,7 +4,7 @@
 
 #include"../../ChTexture/ChTexture11.h"
 #include"ChCBPolygon11.h"
-#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Texture/BaseTexture.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Texture/BaseTexture.hlsli"
 using namespace ChD3D11;
 using namespace CB;
 

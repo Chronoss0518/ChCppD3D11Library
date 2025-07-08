@@ -3,7 +3,7 @@
 
 #include"../ChCBBase11.h"
 
-#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Highlight.hlsli"
+#include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Highlight.hlsli"
 
 namespace ChD3D11
 {

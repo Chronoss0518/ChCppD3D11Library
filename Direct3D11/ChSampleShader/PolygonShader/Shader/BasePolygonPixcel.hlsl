@@ -4,9 +4,9 @@
 
 #include"PolygonBase.hlsli"
 
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/DrawPolygon.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Light.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/5.0/Texture/BaseTexture.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Light.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Texture/BaseTexture.hlsli"
 
 float4 LightCol(VS_OUT _base, float4 _color);
 
