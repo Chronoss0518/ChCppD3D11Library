@@ -1,7 +1,7 @@
 #ifndef Ch_D3D11_Cam_h
 #define Ch_D3D11_Cam_h
 
-#include"../../BasePack/ChMath3D.h"
+#include"../../../ChCppBaseLibrary/BasePack/ChMath3D.h"
 #include"../ChPackDate/ChVector3_11.h"
 #include"../ChPackDate/ChMatrix_11.h"
 
