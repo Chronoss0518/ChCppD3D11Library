@@ -120,23 +120,64 @@ namespace ChD3D11
 	public://Create Functions//
 
 
-#ifndef CPP20
+		void CreateTextureFromShiftJis(
+			const std::string& _texPath,
+			ID3D11Device* _device)
+		{
+			CreateTexture(ChStr::GetUTF16FromShiftJis(_texPath), _device);
+		}
 
+		void CreateTextureFromShiftJis(const std::string& _texPath)
+		{
+			if (!D3D11API().IsInit())return;
+			ID3D11Device* tmpDevice = D3D11Device();
+			CreateTexture(ChStr::GetUTF16FromShiftJis(_texPath), tmpDevice);
+		}
+
+		void CreateTextureFromUTF8(
+			const std::string& _texPath,
+			ID3D11Device* _device)
+		{
+			CreateTexture(ChStr::GetUTF16FromUTF8(_texPath), _device);
+		}
+
+		void CreateTextureFromUTF8(const std::string& _texPath)
+		{
+			if (!D3D11API().IsInit())return;
+			ID3D11Device* tmpDevice = D3D11Device();
+			CreateTexture(ChStr::GetUTF16FromUTF8(_texPath), tmpDevice);
+		}
+
+#ifdef UNICODE
 		void CreateTexture(
 			const std::string& _texPath,
 			ID3D11Device* _device)
 		{
-			CreateTexture(ChStr::UTF8ToWString(_texPath), _device);
+			CreateTexture(ChStr::GetUTF16FromUTF8(_texPath), _device);
 		}
 
 		void CreateTexture(const std::string& _texPath)
 		{
 			if (!D3D11API().IsInit())return;
 			ID3D11Device* tmpDevice = D3D11Device();
-			CreateTexture(ChStr::UTF8ToWString(_texPath), tmpDevice);
+			CreateTexture(ChStr::GetUTF16FromUTF8(_texPath), tmpDevice);
+		}
+#else
+		void CreateTexture(
+			const std::string& _texPath,
+			ID3D11Device* _device)
+		{
+			CreateTexture(ChStr::GetUTF16FromShiftJis(_texPath), _device);
 		}
 
+		void CreateTexture(const std::string& _texPath)
+		{
+			if (!D3D11API().IsInit())return;
+			ID3D11Device* tmpDevice = D3D11Device();
+			CreateTexture(ChStr::GetUTF16FromShiftJis(_texPath), tmpDevice);
+		}
 #endif
+
 		void CreateTexture(
 			const std::wstring& _texPath,
 			ID3D11Device* _device);
