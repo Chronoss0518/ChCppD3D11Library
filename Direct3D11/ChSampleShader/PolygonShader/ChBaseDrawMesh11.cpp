@@ -242,4 +242,4 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::Update(ID3D11DeviceContext* _dc
 	updateFlg = false;
 }
 
-CH_STRING_TYPE_USE_D3D11_MESH_EXPLICIT_DECLARATION(ChD3D11::Shader::BaseDrawMesh11);
+CH_STRING_TYPE_USE_FILE_EXPLICIT_DECLARATION(ChD3D11::Shader::BaseDrawMesh11);
