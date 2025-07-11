@@ -21,10 +21,4 @@
 
 #endif
 
-#ifndef CH_STRING_TYPE_USE_D3D11_MESH_EXPLICIT_DECLARATION
-#define CH_STRING_TYPE_USE_D3D11_MESH_EXPLICIT_DECLARATION(_Class)\
-template class _Class<wchar_t>
-#endif
-
-
 #endif
