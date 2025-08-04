@@ -146,7 +146,6 @@ void ChD3D11::FrameComponent11<CharaType>::SetBoneData(CB::CBBone11& _bone)
 	{
 		size_t useNum = boneList.size() - 1 - i;
 
-		_bone.SetBoneObjectDrawMatrix(boneList[useNum]->targetObject->GetDrawLHandMatrix(), static_cast<unsigned long>(i));
 		_bone.SetBoneOffsetMatrix(boneList[useNum]->boneData->boneOffset, static_cast<unsigned long>(i));
 	}
 }
