@@ -24,9 +24,9 @@ VS_OUT main
 
 	res.worldPos = _pos;
 
-	float4x4 tmpMat = GetInitMatrix4x4();
-
-	//tmpMat = _blendNum > 0 ? BlendMatrix(_blendPow, _blendNum) : tmpMat;
+    float4x4 tmpMat =  _blendNum > 0 ?
+		BlendMatrix(_blendPow, _blendNum) :
+		charaDatas.frameMatrix;
 	
 	MTWStruct tmp = ModelToWorld(res.worldPos, _uv, _normal, _faceNormal, tmpMat);
 
