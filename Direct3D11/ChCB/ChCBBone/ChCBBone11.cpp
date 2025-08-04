@@ -25,16 +25,6 @@ void CBBone11::Release()
 	SetInitFlg(false);
 }
 
-void CBBone11::SetBoneObjectDrawMatrix(const ChLMat& _mat, const unsigned long _no)
-{
-	if (!*this)return;
-	if (_no >= BONE_MAX_NUM)return;
-	if (bone.skinWeightMat[_no] == _mat)return;
-
-	bone.skinWeightMat[_no] = _mat;
-	updateFlg = true;
-}
-
 void CBBone11::SetBoneOffsetMatrix(const ChLMat& _mat, const unsigned long _no)
 {
 	if (!*this)return;
@@ -42,8 +32,15 @@ void CBBone11::SetBoneOffsetMatrix(const ChLMat& _mat, const unsigned long _no)
 	if (bone.boneOffsetMat[_no] == _mat)return;
 
 	bone.boneOffsetMat[_no] = _mat;
-	bone.boneOffsetInverseMat[_no] = _mat;
-	bone.boneOffsetInverseMat[_no].Inverse();
+	updateFlg = true;
+}
+
+void CBBone11::SetFrameInverseMatrix(const ChLMat& _frameMat)
+{
+	if (!*this)return;
+
+	bone.frameInverseMatrix = _frameMat;
+	bone.frameInverseMatrix.Inverse();
 	updateFlg = true;
 }
 

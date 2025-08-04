@@ -217,6 +217,8 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawEnd()
 				polyData.SetVSCharaData(GetDC());
 
 				drawFrame->drawFrame->SetBoneData(boneData);
+				
+				boneData.SetFrameInverseMatrix(drawFrame->frameMatrix);
 
 				boneData.SetVSDrawData(GetDC());
 
