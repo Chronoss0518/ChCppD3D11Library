@@ -3,7 +3,7 @@
 #define __SHADER__
 #define _SM5_0_
 
-#include"PolygonBase.hlsli"
+#include"PolygonBase2.hlsli"
 
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
 
@@ -30,9 +30,6 @@ VS_OUT main(
     res.instanceID = _instanceID;
 
 	res.color = _color;
-
-	res.temperature = 1.0f;
-	//Out.Temperature = 0.0f;
 
 	return res;
 }

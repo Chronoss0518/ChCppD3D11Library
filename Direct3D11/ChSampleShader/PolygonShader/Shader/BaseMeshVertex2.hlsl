@@ -41,8 +41,6 @@ VS_OUT main
 
     res.color = _color;
 
-    res.temperature = 1.0f;
-
     return res;
 }
 

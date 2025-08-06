@@ -2,11 +2,11 @@
 #define __SHADER__
 #define _SM5_0_
 
-#include"PolygonBase.hlsli"
+#include"PolygonBase2.hlsli"
 
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Light.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Texture/BaseTexture.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Texture/BaseTexture2.hlsli"
 
 float4 LightCol(VS_OUT _base, float4 _color);
 
@@ -69,7 +69,7 @@ OutColor main(VS_OUT _in)
 
 	outColor.color = _in.color;
 
-    float4 baseTexCol = GetBaseTextureColor(_in.uv, _in.instanceID);
+    float4 baseTexCol = GetBaseTextureColorFromNo(_in.uv, _in.instanceID);
 	
     outColor.highLight = outColor.color = mate.dif * baseTexCol * outColor.color;
 	
