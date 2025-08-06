@@ -23,7 +23,9 @@ namespace ChD3D11
 
 		public://Init And Release//
 
-			virtual void Init(ID3D11Device* _device)override;
+			virtual void Init(
+				ID3D11Device* _device,
+				size_t _drawMaxCount)override;
 
 			virtual void Release()override;
 
@@ -33,7 +35,7 @@ namespace ChD3D11
 
 			void SetViewMatrix(const ChLMat& _mat);
 
-			void SetMoveUV(const ChVec2& _move);
+			void SetMoveUV(const ChVec2& _move, size_t _no);
 
 			void SetFillMode(const D3D11_FILL_MODE _fill);
 
@@ -51,7 +53,7 @@ namespace ChD3D11
 
 			inline D3D11_CULL_MODE GetCullMode() { return cull; }
 
-			inline ChVec2 GetMoveUV() { return polyData.GetMoveUV(); }
+			inline ChVec2 GetMoveUV(size_t _no = 0) { return polyData.GetMoveUV(_no); }
 
 			inline ChLMat GetViewMatrix() { return polyData.GetViewMatrix(); }
 

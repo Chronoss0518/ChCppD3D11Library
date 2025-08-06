@@ -8,7 +8,8 @@
 using namespace ChD3D11;
 using namespace Shader;
 
-void SampleShaderBase11_2::Init(ID3D11Device* _device)
+void SampleShaderBase11_2::Init(ID3D11Device* _device,
+	size_t _drawMaxCount)
 {
 	if (ChPtr::NullCheck(_device))return;
 
@@ -47,7 +48,7 @@ void SampleShaderBase11_2::Init(ID3D11Device* _device)
 
 		CreateDepthStencilTester(desc);
 	}
-
+	drawMaxCount = _drawMaxCount;
 }
 
 void SampleShaderBase11_2::Release()

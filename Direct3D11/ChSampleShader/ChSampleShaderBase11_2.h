@@ -189,7 +189,9 @@ namespace ChD3D11
 
 		public://Init And Release//
 
-			virtual void Init(ID3D11Device* _device);
+			virtual void Init(
+				ID3D11Device* _device,
+				size_t _drawMaxCount);
 
 			virtual void Release();
 
@@ -222,6 +224,8 @@ namespace ChD3D11
 			ID3D11Device* GetDevice() { return device; }
 
 			ID3D11DeviceContext* GetDC() { return dc; }
+
+			inline size_t maxDrawCount() { return drawMaxCount; }
 
 		private://Get Functions//
 
@@ -259,6 +263,8 @@ namespace ChD3D11
 			bool drawFlg = false;
 
 			ID3D11BlendState* blender = nullptr;
+
+			size_t drawMaxCount = 0;
 		};
 	}
 }

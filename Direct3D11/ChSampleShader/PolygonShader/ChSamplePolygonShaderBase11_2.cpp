@@ -15,19 +15,22 @@ using namespace Shader;
 
 #define DEBUG 0
 
-void SamplePolygonShaderBase11_2::Init(ID3D11Device* _device)
+void SamplePolygonShaderBase11_2::Init(
+	ID3D11Device* _device,
+	size_t _drawMaxCount)
 {
-	if (IsInit())return;
+	if (maxDrawCount() > 0)return;
 
-	SampleShaderBase11::Init(_device);
-	polyData.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
+	SampleShaderBase11_2::Init(_device, _drawMaxCount);
+
+	polyData.Init(_device, &GetWhiteTexture(), maxDrawCount());
 }
 
 void SamplePolygonShaderBase11_2::Release()
 {
-	if (!IsInit())return;
+	if (maxDrawCount() > 0)return;
 
-	SampleShaderBase11::Release();
+	SampleShaderBase11_2::Release();
 	polyData.Release();
 }
 
@@ -41,9 +44,9 @@ void SamplePolygonShaderBase11_2::SetViewMatrix(const ChLMat& _mat)
 	polyData.SetViewMatrix(_mat);
 }
 
-void SamplePolygonShaderBase11_2::SetMoveUV(const ChVec2& _move)
+void SamplePolygonShaderBase11_2::SetMoveUV(const ChVec2& _move, size_t _no)
 {
-	polyData.SetMoveUV(_move);
+	polyData.SetMoveUV(_move, _no);
 }
 
 void SamplePolygonShaderBase11_2::SetFillMode(const D3D11_FILL_MODE _fill)
@@ -60,23 +63,23 @@ void SamplePolygonShaderBase11_2::SetCullMode(const D3D11_CULL_MODE _cull)
 
 void SamplePolygonShaderBase11_2::SetShaderDrawData(ID3D11DeviceContext* _dc)
 {
-	if (!IsInit())return;
+	if (maxDrawCount() <= 0)return;
 	polyData.SetVSDrawData(_dc);
 }
 
 void SamplePolygonShaderBase11_2::SetShaderCharaData(ID3D11DeviceContext* _dc)
 {
-	if (!IsInit())return;
+	if (maxDrawCount() <= 0)return;
 	polyData.SetVSCharaData(_dc);
 }
 
 void SamplePolygonShaderBase11_2::DrawStart(ID3D11DeviceContext* _dc)
 {
 	if (ChPtr::NullCheck(_dc))return;
-	if (!IsInit())return;
+	if (maxDrawCount() <= 0)return;
 	if (IsDraw())return;
 
-	SampleShaderBase11::DrawStart(_dc);
+	SampleShaderBase11_2::DrawStart(_dc);
 	SetShaderDrawData(_dc);
 }
 
@@ -99,6 +102,6 @@ void SamplePolygonShaderBase11_2::Update(ID3D11DeviceContext* _dc)
 		true
 	};
 
-	SampleShaderBase11::CreateRasteriser(desc);
+	SampleShaderBase11_2::CreateRasteriser(desc);
 	updateFlg = false;
 }
