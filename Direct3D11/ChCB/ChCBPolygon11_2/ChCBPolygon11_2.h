@@ -29,31 +29,31 @@ namespace ChD3D11
 
 		public://Set Functions//
 
-			void SetFrameMatrix(const ChLMat& _mat, size_t _no);
+			void SetFrameMatrix(const ChLMat& _mat, size_t _no = 0);
 
-			void SetWorldMatrix(const ChLMat& _mat, size_t _no);
+			void SetWorldMatrix(const ChLMat& _mat, size_t _no = 0);
 
-			void SetMoveUV(const ChVec2& _move, size_t _no);
+			void SetMoveUV(const ChVec2& _move, size_t _no = 0);
 
 			void SetViewMatrix(const ChLMat& _mat);
 
 			void SetProjectionMatrix(const ChLMat& _mat);
 
-			void SetMateDiffuse(const ChVec4& _diffuseCol, size_t _no);
+			void SetMateDiffuse(const ChVec4& _diffuseCol, size_t _no = 0);
 
-			void SetMateSpecularColor(const ChVec3& _specularCol, size_t _no);
+			void SetMateSpecularColor(const ChVec3& _specularCol, size_t _no = 0);
 
-			void SetMateSpecularPower(const float _specularPow, size_t _no);
+			void SetMateSpecularPower(const float _specularPow, size_t _no = 0);
 
-			void SetMateAmbientColor(const ChVec3& _ambientCol, size_t _no);
+			void SetMateAmbientColor(const ChVec3& _ambientCol, size_t _no = 0);
 
 			inline void SetBaseTexture(TextureBase11* _tex) { baseTex = _tex; }
 
 			void SetDrawData(const ChP_DrawData& _data);
 
-			void SetCharaData(const ChP_CharaData& _data,size_t _no);
+			void SetCharaData(const ChP_CharaData& _data,size_t _no = 0);
 
-			void SetMaterialData(const ChP_Material& _data, size_t _no);
+			void SetMaterialData(const ChP_Material& _data, size_t _no = 0);
 
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
@@ -90,6 +90,8 @@ namespace ChD3D11
 			inline ChLMat GetFrameMatrix(size_t _no) { return _no < ChP_MAX_INSTANCE_COUNT ? charaData[_no].frameMatrix : ChLMat(); }
 
 			inline ChVec2 GetMoveUV(size_t _no) { return _no < ChP_MAX_INSTANCE_COUNT ? charaData[_no].moveUV : ChVec2(); }
+
+			inline size_t GetMaxDrawCount() { return drawMaxCount; }
 
 		public://Update Function//
 

@@ -54,7 +54,11 @@ void CBPolygon11::Release()
 	mUpdateFlg = true;
 
 	delete[] charaData;
+	charaData = nullptr;
+
 	delete[] mateData;
+	mateData = nullptr;
+
 	drawMaxCount = 0;
 }
 
