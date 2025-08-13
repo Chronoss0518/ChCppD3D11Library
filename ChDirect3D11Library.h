@@ -48,7 +48,7 @@
 //Component//
 
 //D3DObject//
-#include"BaseIncluder/ChD3DOI.h"
+#include"../ChCppDirect3DLibrary/BaseIncluder/ChD3DOI.h"
 
 #ifdef _DEBUG
 
