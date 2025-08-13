@@ -14,7 +14,7 @@
 #include"ChBaseDrawMesh11_2.h"
 
 template<typename CharaType>
-ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::~BaseDrawMesh11()
+ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::~BaseDrawMesh11_2()
 {
 	Release();
 }
@@ -55,6 +55,9 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Init(ID3D11Device* _device)
 
 	polyData.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
 	boneData.Init(_device);
+
+	ChCpp::ModelObject<CharaType>::Init();
+
 }
 
 template<typename CharaType>
@@ -68,9 +71,9 @@ template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::InitVertexShader()
 {
 
-#include"../PolygonShader/BaseMeshVertex.inc"
+#include"../PolygonShader/BaseMeshVertex2.inc"
 
-	D3D11_INPUT_ELEMENT_DESC decl[10];
+	D3D11_INPUT_ELEMENT_DESC decl[20];
 	
 	//í∏ì_ópÇÃèÓïÒ//
 	decl[0] = { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,0, 0, D3D11_INPUT_PER_VERTEX_DATA };
