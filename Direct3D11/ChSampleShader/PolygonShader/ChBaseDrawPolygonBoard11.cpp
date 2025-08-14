@@ -141,7 +141,7 @@ void BaseDrawPolygonBoard11::Draw(
 
 		indexBuffer.SetIndexBuffer(GetDC());
 
-		GetDC()->DrawIndexed(3, 0, 0);
+		GetDC()->DrawIndexedInstanced(3, 1, 0, 0, 0);
 	}
 
 	if (alphaBlendFlg)
