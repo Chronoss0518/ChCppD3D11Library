@@ -8,9 +8,10 @@
 //頂点シェダ(VertexShader)//
 //スプライトバージョン//
 VS_OUT main(
-	float4 pos : POSITION0
-	, float2 uv : TEXCOORD0
-	, float4 color : COLOR0
+	float4 pos : POSITION0,
+	float2 uv : TEXCOORD0,
+	float4 color : COLOR0,
+	uint _instanceId : SV_InstanceID
 ) {
 	VS_OUT res;
 

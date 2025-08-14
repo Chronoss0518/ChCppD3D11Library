@@ -9,10 +9,11 @@
 
 //板ポリゴンバージョン//
 VS_OUT main(
-	float4 _pos			: POSITION0
-	, float2 _uv		: TEXCOORD0
-	, float4 _color		: COLOR0
-	, float3 _normal	: NORMAL0
+	float4 _pos			: POSITION0,
+	float2 _uv		: TEXCOORD0,
+	float4 _color		: COLOR0,
+	float3 _normal : NORMAL0,
+	uint _instanceId : SV_InstanceID
 ) {
 	VS_OUT res;
 
