@@ -8,7 +8,7 @@
 #include"../../ChMesh/ChMesh11.h"
 
 #include"../../ChCB/ChCBLight/ChCBLight11.h"
-#include"../../ChCB/ChCBPolygon/ChCBPolygon11.h"
+#include"../../ChCB/ChCBPolygon11_2/ChCBPolygon11_2.h"
 #include"../../ChCB/ChCBBone/ChCBBone11.h"
 
 #include"ChBaseDrawMesh11_2.h"
@@ -20,11 +20,12 @@ ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::~BaseDrawMesh11_2()
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Init(ID3D11Device* _device)
+void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Init(ID3D11Device* _device,
+	size_t _drawMaxCount)
 {
 	if (IsInit())return;
 
-	SamplePolygonShaderBase11::Init(_device);
+	SamplePolygonShaderBase11_2::Init(_device, _drawMaxCount);
 
 	{
 		D3D11_BLEND_DESC desc;
@@ -53,7 +54,7 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Init(ID3D11Device* _device)
 
 	SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	polyData.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
+	polyData.Init(_device, &GetWhiteTexture());
 	boneData.Init(_device);
 
 	ChCpp::ModelObject<CharaType>::Init();
@@ -63,7 +64,7 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Init(ID3D11Device* _device)
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Release()
 {
-	SamplePolygonShaderBase11::Release();
+	SamplePolygonShaderBase11_2::Release();
 	polyData.Release();
 }
 
@@ -99,7 +100,7 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::InitVertexShader()
 	decl[18] = { "BLENDWEIGHT",  2, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
 	decl[19] = { "BLENDWEIGHT",  3, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
 
-	SamplePolygonShaderBase11::CreateVertexShader(decl, sizeof(decl) / sizeof(D3D11_INPUT_ELEMENT_DESC), main, sizeof(main));
+	InitVertexShader(decl, sizeof(decl) / sizeof(D3D11_INPUT_ELEMENT_DESC), main, sizeof(main));
 }
 
 template<typename CharaType>
@@ -107,7 +108,7 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::InitPixelShader()
 {
 #include"../PolygonShader/BasePolygonPixcel.inc"
 
-	SamplePolygonShaderBase11::CreatePixelShader(main, sizeof(main));
+	SamplePolygonShaderBase11_2::InitPixelShader(main, sizeof(main));
 }
 
 template<typename CharaType>
@@ -117,6 +118,9 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::DrawStart(ID3D11DeviceContext
 	if (IsDraw())return;
 
 	SamplePolygonShaderBase11::DrawStart(_dc);
+
+	if (alphaBlendFlg)
+		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
 }
 
 template<typename CharaType>
@@ -127,8 +131,6 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::Draw(
 	if (!IsInit())return;
 	if (!IsDraw())return;
 	if (ChPtr::NullCheck(GetDC()))return;
-
-	worldMat = _mat;
 
 	DrawUpdate(_mesh);
 }
@@ -165,7 +167,6 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::DrawUpdate(ChCpp::FrameObject
 		if (child.expired())continue;
 		DrawUpdate(*child.lock());
 	}
-
 }
 
 template<typename CharaType>
@@ -183,71 +184,48 @@ void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::DrawMain(ChCpp::FrameObject<C
 
 	auto&& frame = frameCom->GetFrameCom();
 
-	auto drawData = ChPtr::Make_S<DrawData>();
+	unsigned int offsets = 0;
 
-	drawData->worldMatrix = worldMat;
-	drawData->frameMatrix = drawMatrix;
-	drawData->drawFrame = frameCom.get();
+	for (auto&& prim : primitives)
+	{
+		if (prim == nullptr)continue;
 
-	drawDatas[frame].push_back(drawData);
+		auto&& mate11 = *prim->mate;
+
+		polyData.SetMateDiffuse(mate11.mate.diffuse);
+		polyData.SetMateSpecularColor(mate11.mate.specularColor);
+		polyData.SetMateSpecularPower(mate11.mate.specularPower);
+		polyData.SetMateAmbientColor(mate11.mate.ambient);
+
+		polyData.SetShaderMaterialData(GetDC());
+
+		prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
+		prim->indexBuffer.SetIndexBuffer(GetDC());
+
+		//polyData.SetWorldMatrix(drawFrame->worldMatrix);
+
+		polyData.SetFrameMatrix(frameCom->frameMatrix);
+
+		polyData.SetVSCharaData(GetDC());
+
+		frameCom->SetBoneData(boneData);
+
+		boneData.SetFrameInverseMatrix(frameCom->frameMatrix);
+
+		boneData.SetVSDrawData(GetDC());
+
+		polyData.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get());
+		polyData.SetNormalTexture(prim->textures[Ch3D::TextureType::Normal].get());
+
+		polyData.SetShaderTexture(GetDC());
+
+		GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()), 1, 0, 0, 0);
+	}
 }
 
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMesh11_2<CharaType>::DrawEnd()
 {
-	unsigned int offsets = 0;
-
-	if (alphaBlendFlg)
-	{
-		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
-	}
-
-	for (auto&& drawData : drawDatas)
-	{
-		if (drawData.second.empty())continue;
-		auto&& primitiveData = drawData.second[0]->drawFrame->GetPrimitives();
-
-		for (auto&& prim : primitiveData)
-		{
-			if (prim == nullptr)continue;
-
-			auto&& mate11 = *prim->mate;
-
-			polyData.SetMateDiffuse(mate11.mate.diffuse);
-			polyData.SetMateSpecularColor(mate11.mate.specularColor);
-			polyData.SetMateSpecularPower(mate11.mate.specularPower);
-			polyData.SetMateAmbientColor(mate11.mate.ambient);
-
-			polyData.SetShaderMaterialData(GetDC());
-
-			prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
-			prim->indexBuffer.SetIndexBuffer(GetDC());
-
-			for (auto&& drawFrame : drawData.second)
-			{
-
-				polyData.SetWorldMatrix(drawFrame->worldMatrix);
-
-				polyData.SetFrameMatrix(drawFrame->frameMatrix);
-
-				polyData.SetVSCharaData(GetDC());
-
-				drawFrame->drawFrame->SetBoneData(boneData);
-
-				boneData.SetFrameInverseMatrix(drawFrame->frameMatrix);
-
-				boneData.SetVSDrawData(GetDC());
-
-				polyData.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get());
-				polyData.SetNormalTexture(prim->textures[Ch3D::TextureType::Normal].get());
-
-				polyData.SetShaderTexture(GetDC());
-
-				GetDC()->DrawIndexed(static_cast<unsigned int>(prim->indexArray.size()), 0, 0);
-			}
-		}
-	}
-	if (!drawDatas.empty())drawDatas.clear();
 	SamplePolygonShaderBase11::SetShaderDefaultBlender(GetDC());
 	SamplePolygonShaderBase11::DrawEnd();
 }

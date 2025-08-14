@@ -4,7 +4,7 @@
 
 #include"PolygonBase2.hlsli"
 
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon2.hlsli"
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Light.hlsli"
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Texture/BaseTexture2.hlsli"
 
@@ -71,11 +71,11 @@ OutColor main(VS_OUT _in)
 
     float4 baseTexCol = GetBaseTextureColorFromNo(_in.uv, _in.instanceID);
 	
-    outColor.highLight = outColor.color = mate.dif * baseTexCol * outColor.color;
+    outColor.highLight = outColor.color = mate[_in.instanceID].diffuse * baseTexCol * outColor.color;
 	
     AlphaTest(outColor.color.a);
 	
-    outColor.color.rgb = GetLightColor(outColor.color, _in, mate);
+    outColor.color.rgb = GetLightColor(outColor.color, _in, mate[_in.instanceID]);
 	
     outColor.highLight.r = max(outColor.highLight.r - 1.0f, 0.0f);
     outColor.highLight.g = max(outColor.highLight.g - 1.0f, 0.0f);
@@ -97,8 +97,8 @@ float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChP_Material _mate)
 	lightCol.color = _baseColor.rgb;
 	lightCol.wPos = _inVertex.worldPos.xyz;
 	lightCol.wfNormal = _inVertex.faceNormal;
-	lightCol.specular.rgb = _mate.speCol;
-	lightCol.specular.a = _mate.spePow;
+	lightCol.specular.rgb = _mate.specularCol;
+    lightCol.specular.a = _mate.specularPow;
 
 	return GetDirectionalLightColor(lightCol);
 

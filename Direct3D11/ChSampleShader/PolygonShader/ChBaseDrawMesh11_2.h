@@ -1,7 +1,7 @@
 #ifndef Ch_D3D11_SS_BaseMesh_h
 #define Ch_D3D11_SS_BaseMesh_h
 
-#include"ChSamplePolygonShaderBase11.h"
+#include"ChSamplePolygonShaderBase11_2.h"
 
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
@@ -16,7 +16,7 @@ namespace ChD3D11
 	namespace Shader
 	{
 		template<typename CharaType>
-		class BaseDrawMesh11_2 final :public SamplePolygonShaderBase11_2, public ChCpp::ModelObject<CharaType>
+		class BaseDrawMesh11_2 final :public SamplePolygonShaderBase11_2
 		{
 		public://Constructor Destructor//
 
@@ -24,19 +24,24 @@ namespace ChD3D11
 
 		public://Init And Release//
 
-			void Init(ID3D11Device* _device)override;
+			void Init(ID3D11Device* _device,
+				size_t _drawMaxCount)override;
 
 			void Release()override;
 
-		protected://Init And Release//
+		private:
 
-			void InitVertexShader()override;
+			void InitVertexShader();
 
-			void InitPixelShader()override;
+			void InitPixelShader();
 
 		public://Other Functions//
 
 			void DrawStart(ID3D11DeviceContext* _dc)override;
+
+			void Draw(
+				Mesh11<CharaType>& _mesh,
+				std::vector<ChLMat>& _worldMats);
 
 			void Draw(
 				Mesh11<CharaType>& _mesh,

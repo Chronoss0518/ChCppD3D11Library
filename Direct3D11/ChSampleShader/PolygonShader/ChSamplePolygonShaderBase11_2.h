@@ -13,9 +13,7 @@ namespace ChD3D11
 	namespace Shader
 	{
 
-		class SamplePolygonShaderBase11_2 :
-			public SampleShaderBase11_2,
-			public ShaderBase11Interface
+		class SamplePolygonShaderBase11_2 : public SampleShaderBase11_2
 		{
 		public://Constructor Destructor//
 
@@ -69,7 +67,7 @@ namespace ChD3D11
 
 		protected://Member Value//
 
-			CB::CBPolygon11 polyData;
+			CB::CBPolygon11_2 polyData;
 
 			D3D11_FILL_MODE fill = D3D11_FILL_MODE::D3D11_FILL_SOLID;
 			D3D11_CULL_MODE cull = D3D11_CULL_MODE::D3D11_CULL_NONE;

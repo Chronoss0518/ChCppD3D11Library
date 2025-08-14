@@ -11,11 +11,11 @@ namespace ChD3D11
 
 	namespace CB
 	{
-		class CBPolygon11 final :public CBBase11
+		class CBPolygon11_2 final :public CBBase11
 		{
 		public:
 
-			virtual ~CBPolygon11() { Release(); }
+			virtual ~CBPolygon11_2() { Release(); }
 
 		public://InitAndRelease//
 
@@ -83,13 +83,13 @@ namespace ChD3D11
 
 			inline ChLMat GetViewMatrix() { return drawData.viewMat; }
 
-			inline ChP_CharaData GetCharaData(size_t _no) { return _no < ChP_MAX_INSTANCE_COUNT ? charaData[_no] : ChP_CharaData(); }
+			inline ChP_CharaData GetCharaData(size_t _no) { return _no < CHP_MAX_INSTANCE_COUNT ? charaData[_no] : ChP_CharaData(); }
 
-			inline ChLMat GetWorldMatrix(size_t _no) { return _no < ChP_MAX_INSTANCE_COUNT ? charaData[_no].worldMat : ChLMat(); }
+			inline ChLMat GetWorldMatrix(size_t _no) { return _no < CHP_MAX_INSTANCE_COUNT ? charaData[_no].worldMat : ChLMat(); }
 
-			inline ChLMat GetFrameMatrix(size_t _no) { return _no < ChP_MAX_INSTANCE_COUNT ? charaData[_no].frameMatrix : ChLMat(); }
+			inline ChLMat GetFrameMatrix(size_t _no) { return _no < CHP_MAX_INSTANCE_COUNT ? charaData[_no].frameMatrix : ChLMat(); }
 
-			inline ChVec2 GetMoveUV(size_t _no) { return _no < ChP_MAX_INSTANCE_COUNT ? charaData[_no].moveUV : ChVec2(); }
+			inline ChVec2 GetMoveUV(size_t _no) { return _no < CHP_MAX_INSTANCE_COUNT ? charaData[_no].moveUV : ChVec2(); }
 
 			inline size_t GetMaxDrawCount() { return drawMaxCount; }
 

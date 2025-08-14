@@ -8,10 +8,12 @@
 using namespace ChD3D11;
 using namespace Shader;
 
-void SampleShaderBase11_2::Init(ID3D11Device* _device,
+void SampleShaderBase11_2::Init(
+	ID3D11Device* _device,
 	size_t _drawMaxCount)
 {
 	if (ChPtr::NullCheck(_device))return;
+	if (IsInit())return;
 
 	device = _device;
 
@@ -48,11 +50,16 @@ void SampleShaderBase11_2::Init(ID3D11Device* _device,
 
 		CreateDepthStencilTester(desc);
 	}
+
 	drawMaxCount = _drawMaxCount;
+
+	SetInitFlg(true);
 }
 
 void SampleShaderBase11_2::Release()
 {
+	if (!IsInit())return;
+
 	if (ChPtr::NotNullCheck(rasteriser))
 	{
 		rasteriser->Release();
@@ -72,6 +79,8 @@ void SampleShaderBase11_2::Release()
 	}
 
 	whiteTex.Release();
+
+	SetInitFlg(false);
 
 }
 

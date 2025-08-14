@@ -12,54 +12,6 @@ namespace ChD3D11
 
 	namespace Shader
 	{
-		//this class is In VertexShader And PixelShader//
-		class ShaderBase11Interface
-		{
-		protected:
-
-			virtual ~ShaderBase11Interface() { vs.Release(); ps.Release(); }
-
-		protected://Init And Release//
-
-			inline void InitVertexShader(
-				ID3D11Device* _device,
-				const D3D11_INPUT_ELEMENT_DESC* _decl,
-				unsigned long _declNum,
-				const unsigned char* _shaderByte,
-				unsigned long _shaderByteNum)
-			{
-				if (ChPtr::NullCheck(_device))return;
-				vs.Init(_device, _decl, _declNum, _shaderByte, _shaderByteNum);
-			}
-
-			inline void InitPixelShader(
-				ID3D11Device* _device,
-				const unsigned char* _shaderByte,
-				unsigned long _shaderByteNum)
-			{
-				if (ChPtr::NullCheck(_device))return;
-				ps.Init(_device, _shaderByte, _shaderByteNum);
-			}
-
-		protected://Set Functions//
-
-			inline void SetVertexShader(ID3D11DeviceContext* _dc)
-			{
-				if (ChPtr::NullCheck(_dc))return;
-				vs.SetShader(_dc);
-			}
-
-			inline void SetPixelShader(ID3D11DeviceContext* _dc)
-			{
-				if (ChPtr::NullCheck(_dc))return;
-				ps.SetShader(_dc);
-			}
-
-		private:
-
-			VertexShader11 vs;
-			PixelShader11 ps;
-		};
 
 		class GShader11Interface
 		{
@@ -181,11 +133,11 @@ namespace ChD3D11
 			ComputeShader11 cs;
 		};
 
-		class SampleShaderBase11_2
+		class SampleShaderBase11_2 : public ChCp::Initializer
 		{
 		public:
 
-			virtual ~SampleShaderBase11_2() { Release(); }
+			virtual ~SampleShaderBase11_2() { Release(); vs.Release(); ps.Release(); }
 
 		public://Init And Release//
 
@@ -194,6 +146,28 @@ namespace ChD3D11
 				size_t _drawMaxCount);
 
 			virtual void Release();
+
+		protected://Init And Release//
+
+			inline void InitVertexShader(
+				ID3D11Device* _device,
+				const D3D11_INPUT_ELEMENT_DESC* _decl,
+				unsigned long _declNum,
+				const unsigned char* _shaderByte,
+				unsigned long _shaderByteNum)
+			{
+				if (ChPtr::NullCheck(_device))return;
+				vs.Init(_device, _decl, _declNum, _shaderByte, _shaderByteNum);
+			}
+
+			inline void InitPixelShader(
+				ID3D11Device* _device,
+				const unsigned char* _shaderByte,
+				unsigned long _shaderByteNum)
+			{
+				if (ChPtr::NullCheck(_device))return;
+				ps.Init(_device, _shaderByte, _shaderByteNum);
+			}
 
 		protected://Create Functions//
 
@@ -204,6 +178,18 @@ namespace ChD3D11
 			void CreateDepthStencilTester(const D3D11_DEPTH_STENCIL_DESC& _desc);
 
 		protected://Set Functions//
+
+			inline void SetVertexShader(ID3D11DeviceContext* _dc)
+			{
+				if (ChPtr::NullCheck(_dc))return;
+				vs.SetShader(_dc);
+			}
+
+			inline void SetPixelShader(ID3D11DeviceContext* _dc)
+			{
+				if (ChPtr::NullCheck(_dc))return;
+				ps.SetShader(_dc);
+			}
 
 			void SetShaderRasteriser(ID3D11DeviceContext* _dc);
 
@@ -255,6 +241,9 @@ namespace ChD3D11
 			ID3D11DepthStencilState* depthStencilTester = nullptr;
 			ID3D11Device* device = nullptr;
 			ID3D11DeviceContext* dc = nullptr;
+
+			VertexShader11 vs;
+			PixelShader11 ps;
 
 			Texture11 whiteTex;
 
