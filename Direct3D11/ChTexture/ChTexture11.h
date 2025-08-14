@@ -34,6 +34,7 @@ struct IWICBitmap;
 
 namespace ChD3D11
 {
+	class DepthStencilTexture11;
 
 	class TextureBase11
 	{
@@ -55,6 +56,12 @@ namespace ChD3D11
 		}
 
 		void SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureNo);
+
+	public://Set Functions//
+
+		static void SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureNo,std::vector<TextureBase11*>& _textureList);
+
+		static void SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureNo,std::vector<ID3D11ShaderResourceView*>& _textureList, std::vector<ID3D11SamplerState*>& _samplerList);
 
 	public://Get Functions//
 
@@ -258,6 +265,20 @@ namespace ChD3D11
 	public://Set Functions//
 
 		void SetBackColor(ID3D11DeviceContext* _dc, const ChVec4& _buckColor);
+
+		void SetRenderTarget(ID3D11DeviceContext* _dc, ID3D11DepthStencilView* _dsView);
+
+		void SetRenderTarget(ID3D11DeviceContext* _dc, DepthStencilTexture11& _dsView);
+
+	public://Set Functions//
+
+		static void SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<ID3D11RenderTargetView*>& _renderTarget, ID3D11DepthStencilView* _dsView);
+
+		static void SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<ID3D11RenderTargetView*>& _renderTarget, DepthStencilTexture11& _dsView);
+
+		static void SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<RenderTarget11*>& _renderTarget, ID3D11DepthStencilView* _dsView);
+
+		static void SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<RenderTarget11*>& _renderTarget, DepthStencilTexture11& _dsView);
 
 	public://Get Functions//
 

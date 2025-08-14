@@ -103,12 +103,39 @@ void TextureBase11::UpdateSampler()
 
 void TextureBase11::SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureNo)
 {
-	if (ChPtr::NullCheck(texView))return;
+	std::vector<ID3D11ShaderResourceView*>tmpTextures;
+	std::vector<ID3D11SamplerState*>tmpSamplers;
+	tmpTextures.push_back(texView);
+	tmpSamplers.push_back(sampler);
+	TextureBase11::SetDrawData(_dc, _textureNo, tmpTextures, tmpSamplers);
+}
 
-	UpdateSampler();
+void TextureBase11::SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureNo, std::vector<TextureBase11*>& _textureList)
+{
+	if (_textureList.empty())return;
 
-	_dc->PSSetShaderResources(_textureNo, 1, &texView);
-	_dc->PSSetSamplers(_textureNo, 1, &sampler);
+	std::vector<ID3D11ShaderResourceView*>shaderResourceViews;
+	std::vector<ID3D11SamplerState*>samplers;
+
+	for (unsigned long i = 0; i < _textureList.size(); i++)
+	{
+		if (ChPtr::NullCheck(_textureList[i]))continue;
+		if (!_textureList[i]->IsTex())continue;
+		_textureList[i]->UpdateSampler();
+		shaderResourceViews.push_back(_textureList[i]->texView);
+		samplers.push_back(_textureList[i]->sampler);
+	}
+
+	TextureBase11::SetDrawData(_dc, _textureNo, shaderResourceViews, samplers);
+}
+
+void TextureBase11::SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureNo, std::vector<ID3D11ShaderResourceView*>& _textureList, std::vector<ID3D11SamplerState*>& _samplerList)
+{
+	if (_textureList.empty())return;
+	if (_samplerList.empty())return;
+
+	_dc->PSSetShaderResources(_textureNo, _textureList.size(), &_textureList[0]);
+	_dc->PSSetSamplers(_textureNo, _samplerList.size(), &_samplerList[0]);
 }
 
 D3D11_TEXTURE2D_DESC TextureBase11::GetTextureDesc()
@@ -438,6 +465,56 @@ void RenderTarget11::SetBackColor(ID3D11DeviceContext* _dc, const ChVec4& _backC
 {
 	if (ChPtr::NullCheck(_dc))return;
 	_dc->ClearRenderTargetView(rtView, _backColor.val.GetVal());
+}
+
+void RenderTarget11::SetRenderTarget(ID3D11DeviceContext* _dc, ID3D11DepthStencilView* _dsView)
+{
+	_dc->OMSetRenderTargets(1, &rtView, _dsView);
+}
+
+void RenderTarget11::SetRenderTarget(ID3D11DeviceContext* _dc, DepthStencilTexture11& _dsView)
+{
+	_dc->OMSetRenderTargets(1, &rtView, _dsView.GetDSView());
+}
+
+void RenderTarget11::SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<ID3D11RenderTargetView*>& _renderTarget, ID3D11DepthStencilView* _dsView)
+{
+	_dc->OMSetRenderTargets(_renderTarget.size(), &_renderTarget[0], _dsView);
+}
+
+void RenderTarget11::SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<ID3D11RenderTargetView*>& _renderTarget, DepthStencilTexture11& _dsView)
+{
+	_dc->OMSetRenderTargets(_renderTarget.size(), &_renderTarget[0], _dsView.GetDSView());
+}
+
+void RenderTarget11::SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<RenderTarget11*>& _renderTarget, ID3D11DepthStencilView* _dsView)
+{
+	std::vector<ID3D11RenderTargetView*> rtViewList;
+
+	for (size_t i = 0; i < _renderTarget.size(); i++)
+	{
+		if (ChPtr::NullCheck(_renderTarget[i]))continue;
+		if (!_renderTarget[i]->IsTex())continue;
+
+		rtViewList.push_back(_renderTarget[i]->rtView);
+	}
+
+	RenderTarget11::SetRenderTarget(_dc, rtViewList, _dsView);
+}
+
+void RenderTarget11::SetRenderTarget(ID3D11DeviceContext* _dc, std::vector<RenderTarget11*>& _renderTarget, DepthStencilTexture11& _dsView)
+{
+	std::vector<ID3D11RenderTargetView*> rtViewList;
+
+	for (size_t i = 0; i < _renderTarget.size(); i++)
+	{
+		if (ChPtr::NullCheck(_renderTarget[i]))continue;
+		if (!_renderTarget[i]->IsTex())continue;
+
+		rtViewList.push_back(_renderTarget[i]->rtView);
+	}
+
+	RenderTarget11::SetRenderTarget(_dc, rtViewList, _dsView.GetDSView());
 }
 
 void DepthStencilTexture11::Release()
