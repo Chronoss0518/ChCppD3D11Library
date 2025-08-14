@@ -17,7 +17,8 @@ VS_OUT main
 	float3 _normal					: NORMAL0,
 	float3 _faceNormal				: NORMAL1,
 	uint _blendNum					: BLENDINDEX0,
-	row_major float4x4 _blendPow	: BLENDWEIGHT0
+	row_major float4x4 _blendPow	: BLENDWEIGHT0,
+	uint _instanceId				: SV_InstanceID
 )
 {
 	VS_OUT res;

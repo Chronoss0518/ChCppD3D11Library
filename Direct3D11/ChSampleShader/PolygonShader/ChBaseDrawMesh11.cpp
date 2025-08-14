@@ -227,7 +227,7 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawEnd()
 
 				polyData.SetShaderTexture(GetDC());
 
-				GetDC()->DrawIndexed(static_cast<unsigned int>(prim->indexArray.size()), 0, 0);
+				GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()),1,0, 0, 0);
 			}
 		}
 	}

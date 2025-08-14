@@ -74,7 +74,7 @@ void BaseDrawSprite11::Draw(
 
 	indexBuffer.SetIndexBuffer(GetDC());
 
-	GetDC()->DrawIndexed(6, 0, 0);
+	GetDC()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
 	if (alphaBlendFlg)
 		SampleSpriteShaderBase11::SetShaderDefaultBlender(GetDC());
