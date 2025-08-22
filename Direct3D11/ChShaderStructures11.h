@@ -3,6 +3,36 @@
 #ifndef Ch_D3D11_SStruct_h
 #define Ch_D3D11_SStruct_h
 
+#ifndef CH_CONSTANTS_BUFFER_STATIC_METHODS
+#define CH_CONSTANTS_BUFFER_STATIC_METHODS(methodName,dcMethodName)\
+static inline void methodName(\
+	ID3D11DeviceContext* _dc,\
+	unsigned long _registerNo,\
+	std::vector<ConstantBuffer11<content>*>& _constants){\
+	if (ChPtr::NullCheck(_dc))return;\
+	std::vector<ID3D11Buffer*>buffers;\
+\
+	for (auto&& con : _constants){\
+		if (ChPtr::NullCheck(con))continue;\
+		if (!con->IsInit())continue;\
+		if (con->registerNo != _registerNo)continue;\
+		buffers.push_back(con->buf);}\
+\
+	ConstantBuffer11<content>::methodName(_dc, _registerNo, buffers);\
+}\
+\
+static inline void methodName(\
+	ID3D11DeviceContext* _dc,\
+	unsigned long _registerNo,\
+	std::vector<ID3D11Buffer*>& _buffers){\
+	if (_buffers.empty())return;\
+	if (ChPtr::NullCheck(_dc))return;\
+\
+	_dc->dcMethodName(_registerNo, _buffers.size(), &_buffers[0]);\
+}
+
+#endif
+
 namespace ChD3D11
 {
 	class TextureBase11;
@@ -205,26 +235,47 @@ namespace ChD3D11
 			ID3D11DeviceContext* _dc,
 			const unsigned int _offset)
 		{
-
-			if (!*this)return;
-			if (ChPtr::NullCheck(_dc))return;
-
-			unsigned int strides = sizeof(vertex);
-			_dc->IASetVertexBuffers(0, 1, &buf, &strides, &_offset);
+			if (!IsInit())return;
+			std::vector<ID3D11Buffer*>list;
+			list.push_back(buf);
+			VertexBuffer11<vertex>::SetVertexBuffer(_dc , _offset, list);
 		}
 
-		inline void SetVertexBuffer(
+	public://Set Functions//
+
+		static inline void SetVertexBuffer(
 			ID3D11DeviceContext* _dc,
-			const unsigned int _startSlot,
-			const unsigned int _bufferCount,
-			const unsigned int _offset)
+			const unsigned int _offset,
+			const std::vector<VertexBuffer11<vertex>*>& _vertexs)
 		{
-			if (!*this)return;
 			if (ChPtr::NullCheck(_dc))return;
+
+			unsigned int strides = sizeof(vertex);
+			std::vector<ID3D11Buffer*> buffers;
+
+			for (auto&& vertex : _vertexs)
+			{
+				if (ChPtr::NullCheck(vertex))continue;
+				if (!vertex->IsInit())continue;
+				buffers.push_back(vertex->buf);
+			}
+
+			VertexBuffer11<vertex>::SetVertexBuffer(_dc, _offset, buffers);
+		}
+
+		static inline void SetVertexBuffer(
+			ID3D11DeviceContext* _dc,
+			const unsigned int _offset,
+			const std::vector<ID3D11Buffer*>& _buffers)
+		{
+			if (ChPtr::NullCheck(_dc))return;
+			if (_buffers.empty())return;
+
 			unsigned int strides = sizeof(vertex);
 
-			_dc->IASetVertexBuffers(_startSlot, _bufferCount, &buf, &strides, &_offset);
+			_dc->IASetVertexBuffers(0, _buffers.size(), &_buffers[0], &strides, &_offset);
 		}
+
 	};
 
 	template<class content>
@@ -259,64 +310,90 @@ namespace ChD3D11
 		inline void SetRegisterNo(const unsigned long _registerNo) { registerNo = _registerNo; }
 
 		inline void SetToVertexShader(
-			ID3D11DeviceContext* _dc,
-			const unsigned long updateCount = 1)
+			ID3D11DeviceContext* _dc)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			if (ChPtr::NullCheck(_dc))return;
 
-			_dc->VSSetConstantBuffers(registerNo, updateCount, &buf);
+			std::vector<ID3D11Buffer*>buffers;
+			buffers.push_back(buf);
+
+			ConstantBuffer11<content>::SetToVertexShader(_dc,registerNo, buffers);
 		}
 
 		inline void SetToGeometryShader(
-			ID3D11DeviceContext* _dc,
-			const unsigned long updateCount = 1)
+			ID3D11DeviceContext* _dc)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			if (ChPtr::NullCheck(_dc))return;
 
-			_dc->GSSetConstantBuffers(registerNo, updateCount, &buf);
+			std::vector<ID3D11Buffer*>buffers;
+			buffers.push_back(buf);
+
+			ConstantBuffer11<content>::SetToGeometryShader(_dc, registerNo, buffers);
 		}
 
 		inline void SetToHullShader(
-			ID3D11DeviceContext* _dc,
-			const unsigned long updateCount = 1)
+			ID3D11DeviceContext* _dc)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			if (ChPtr::NullCheck(_dc))return;
 
-			_dc->HSSetConstantBuffers(registerNo, updateCount, &buf);
+			std::vector<ID3D11Buffer*>buffers;
+			buffers.push_back(buf);
+
+			ConstantBuffer11<content>::SetToHullShader(_dc, registerNo, buffers);
 		}
 
 		inline void SetToDomainShader(
-			ID3D11DeviceContext* _dc,
-			const unsigned long updateCount = 1)
+			ID3D11DeviceContext* _dc)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			if (ChPtr::NullCheck(_dc))return;
 
-			_dc->DSSetConstantBuffers(registerNo, updateCount, &buf);
+			std::vector<ID3D11Buffer*>buffers;
+			buffers.push_back(buf);
+
+			ConstantBuffer11<content>::SetToDomainShader(_dc, registerNo, buffers);
 		}
 
 		inline void SetToPixelShader(
-			ID3D11DeviceContext* _dc,
-			const unsigned long updateCount = 1)
+			ID3D11DeviceContext* _dc)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			if (ChPtr::NullCheck(_dc))return;
 
-			_dc->PSSetConstantBuffers(registerNo, updateCount, &buf);
+			std::vector<ID3D11Buffer*>buffers;
+			buffers.push_back(buf);
+
+			ConstantBuffer11<content>::SetToPixelShader(_dc, registerNo, buffers);
 		}
 
 		inline void SetToComputeShader(
-			ID3D11DeviceContext* _dc,
-			const unsigned long updateCount = 1)
+			ID3D11DeviceContext* _dc)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			if (ChPtr::NullCheck(_dc))return;
 
-			_dc->CSSetConstantBuffers(registerNo, updateCount, &buf);
+			std::vector<ID3D11Buffer*>buffers;
+			buffers.push_back(buf);
+
+			ConstantBuffer11<content>::SetToComputeShader(_dc, registerNo, buffers);
 		}
+
+	public://Set Functions//
+
+		CH_CONSTANTS_BUFFER_STATIC_METHODS(SetToVertexShader, VSSetConstantBuffers);
+
+		CH_CONSTANTS_BUFFER_STATIC_METHODS(SetToGeometryShader, GSSetConstantBuffers);
+
+		CH_CONSTANTS_BUFFER_STATIC_METHODS(SetToHullShader, HSSetConstantBuffers);
+
+		CH_CONSTANTS_BUFFER_STATIC_METHODS(SetToDomainShader, DSSetConstantBuffers);
+
+		CH_CONSTANTS_BUFFER_STATIC_METHODS(SetToPixelShader, PSSetConstantBuffers);
+
+		CH_CONSTANTS_BUFFER_STATIC_METHODS(SetToComputeShader, CSSetConstantBuffers);
 
 	public://Get Functions//
 
