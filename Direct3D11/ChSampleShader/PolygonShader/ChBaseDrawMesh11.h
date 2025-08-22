@@ -18,12 +18,6 @@ namespace ChD3D11
 		template<typename CharaType>
 		class BaseDrawMesh11 final :public SamplePolygonShaderBase11
 		{
-			struct DrawData
-			{
-				ChLMat worldMatrix;
-				ChLMat frameMatrix;
-				FrameComponent11<CharaType>* drawFrame = nullptr;
-			};
 
 		public://Constructor Destructor//
 
@@ -64,8 +58,6 @@ namespace ChD3D11
 			CB::CBBone11 boneData;
 
 			ChLMat worldMat;
-
-			std::map<ChCpp::FrameComponent<CharaType>*, std::vector<ChPtr::Shared<DrawData>>>drawDatas;
 		};
 	}
 }

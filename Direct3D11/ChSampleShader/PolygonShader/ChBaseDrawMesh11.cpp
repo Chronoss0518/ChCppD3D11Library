@@ -167,71 +167,50 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawMain(ChCpp::FrameObject<Cha
 
 	auto&& frame = frameCom->GetFrameCom();
 
-	auto drawData = ChPtr::Make_S<DrawData>();
+	unsigned int offsets = 0;
 
-	drawData->worldMatrix = worldMat;
-	drawData->frameMatrix = drawMatrix;
-	drawData->drawFrame = frameCom.get();
+	if (alphaBlendFlg)
+		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
 
-	drawDatas[frame].push_back(drawData);
+	for (auto&& prim : primitives)
+	{
+		if (prim == nullptr)continue;
+
+		auto&& mate11 = *prim->mate;
+
+		polyData.SetMateDiffuse(mate11.mate.diffuse);
+		polyData.SetMateSpecularColor(mate11.mate.specularColor);
+		polyData.SetMateSpecularPower(mate11.mate.specularPower);
+		polyData.SetMateAmbientColor(mate11.mate.ambient);
+
+		polyData.SetShaderMaterialData(GetDC());
+
+		prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
+		prim->indexBuffer.SetIndexBuffer(GetDC());
+
+		polyData.SetWorldMatrix(worldMat);
+
+		polyData.SetFrameMatrix(drawMatrix);
+
+		polyData.SetVSCharaData(GetDC());
+
+		frameCom->SetBoneData(boneData);
+
+		boneData.SetVSDrawData(GetDC());
+
+		polyData.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get());
+		polyData.SetNormalTexture(prim->textures[Ch3D::TextureType::Normal].get());
+
+		polyData.SetShaderTexture(GetDC());
+
+		GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()), 1, 0, 0, 0);
+
+	}
 }
 
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawEnd()
 {
-	unsigned int offsets = 0;
-
-	if (alphaBlendFlg)
-	{
-		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
-	}
-
-	for (auto&& drawData : drawDatas)
-	{
-		if (drawData.second.empty())continue;
-		auto&& primitiveData = drawData.second[0]->drawFrame->GetPrimitives();
-
-		for (auto&& prim : primitiveData)
-		{
-			if (prim == nullptr)continue;
-
-			auto&& mate11 = *prim->mate;
-
-			polyData.SetMateDiffuse(mate11.mate.diffuse);
-			polyData.SetMateSpecularColor(mate11.mate.specularColor);
-			polyData.SetMateSpecularPower(mate11.mate.specularPower);
-			polyData.SetMateAmbientColor(mate11.mate.ambient);
-
-			polyData.SetShaderMaterialData(GetDC());
-
-			prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
-			prim->indexBuffer.SetIndexBuffer(GetDC());
-
-			for (auto&& drawFrame : drawData.second)
-			{
-
-				polyData.SetWorldMatrix(drawFrame->worldMatrix);
-
-				polyData.SetFrameMatrix(drawFrame->frameMatrix);
-
-				polyData.SetVSCharaData(GetDC());
-
-				drawFrame->drawFrame->SetBoneData(boneData);
-				
-				boneData.SetFrameInverseMatrix(drawFrame->frameMatrix);
-
-				boneData.SetVSDrawData(GetDC());
-
-				polyData.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get());
-				polyData.SetNormalTexture(prim->textures[Ch3D::TextureType::Normal].get());
-
-				polyData.SetShaderTexture(GetDC());
-
-				GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()),1,0, 0, 0);
-			}
-		}
-	}
-	if (!drawDatas.empty())drawDatas.clear();
 	SamplePolygonShaderBase11::SetShaderDefaultBlender(GetDC());
 	SamplePolygonShaderBase11::DrawEnd();
 }
