@@ -24,8 +24,6 @@ namespace ChD3D11
 
 			void SetBoneOffsetMatrix(const ChLMat& _mat,const unsigned long _no);
 
-			void SetFrameInverseMatrix(const ChLMat& _frameMat);
-
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
 			void SetVSDrawData(ID3D11DeviceContext* _dc);

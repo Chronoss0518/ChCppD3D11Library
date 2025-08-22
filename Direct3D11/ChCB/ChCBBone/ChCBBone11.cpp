@@ -35,15 +35,6 @@ void CBBone11::SetBoneOffsetMatrix(const ChLMat& _mat, const unsigned long _no)
 	updateFlg = true;
 }
 
-void CBBone11::SetFrameInverseMatrix(const ChLMat& _frameMat)
-{
-	if (!*this)return;
-
-	bone.frameInverseMatrix = _frameMat;
-	bone.frameInverseMatrix.Inverse();
-	updateFlg = true;
-}
-
 void CBBone11::SetPSDrawData(ID3D11DeviceContext* _dc)
 {
 	if (!*this)return;
