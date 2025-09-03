@@ -8,6 +8,8 @@
 #include"../ChTexture/ChTexture11.h"
 #include"ChMesh11.h"
 
+#include"../../../ChCppDirect3DLibrary/ShaderHeaderFiles/BoneBlending.hlsli"
+
 using namespace Ch3D;
 using namespace ChCpp;
 using namespace ChD3D11;
@@ -72,7 +74,7 @@ void ChD3D11::FrameComponent11<CharaType>::CreateAll(ID3D11Device* _device, Mesh
 
 				auto&& tmpVertex = *frameBase->vertexList[vertexNo];
 
-				Ch3D::SkinMeshVertex<16> mVertex;
+				Ch3D::SkinMeshVertex<BONE_MAX_NUM> mVertex;
 				Ch3D::SetPosition(&mVertex, tmpVertex.pos);
 				Ch3D::SetUV(&mVertex, vertex->uv);
 				Ch3D::SetColor(&mVertex, tmpVertex.color);
@@ -141,12 +143,12 @@ void ChD3D11::FrameComponent11<CharaType>::SetBoneData(CB::CBBone11& _bone)
 {
 	if (boneList.empty())return;
 
-	boneList[boneList.size() - 1]->targetObject->UpdateAllDrawTransform();
 	for (size_t i = 0; i < boneList.size(); i++)
 	{
-		size_t useNum = boneList.size() - 1 - i;
-
-		_bone.SetBoneOffsetMatrix(boneList[useNum]->boneData->boneOffset, static_cast<unsigned long>(i));
+		_bone.SetBoneMatrix(
+			boneList[i]->targetObject->GetOffsetLMatrix(),
+			boneList[i]->targetObject->GetDrawLHandMatrix(),
+			static_cast<unsigned long>(i));
 	}
 }
 
