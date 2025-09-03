@@ -25,13 +25,14 @@ void CBBone11::Release()
 	SetInitFlg(false);
 }
 
-void CBBone11::SetBoneOffsetMatrix(const ChLMat& _mat, const unsigned long _no)
+void CBBone11::SetBoneMatrix(const ChLMat& _offsetMat, const ChLMat& _mat, const unsigned long _no)
 {
 	if (!*this)return;
 	if (_no >= BONE_MAX_NUM)return;
 	if (bone.boneOffsetMat[_no] == _mat)return;
 
-	bone.boneOffsetMat[_no] = _mat;
+	bone.boneOffsetMat[_no] = _offsetMat;
+	bone.boneMat[_no] = _mat;
 	updateFlg = true;
 }
 
