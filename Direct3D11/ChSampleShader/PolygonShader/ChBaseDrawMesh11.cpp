@@ -112,9 +112,11 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::Draw(
 	if (!IsDraw())return;
 	if (ChPtr::NullCheck(GetDC()))return;
 
-	worldMat = _mat;
+	polyData.SetWorldMatrix(_mat);
 
-	DrawUpdate(_mesh);
+	ChCpp::FrameObject<CharaType>& frame = _mesh;
+	frame.UpdateFunction();
+	DrawUpdate(frame);
 }
 
 template<typename CharaType>
@@ -155,8 +157,6 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawUpdate(ChCpp::FrameObject<C
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
 {
-	ChLMat drawMatrix = _object.GetDrawLHandMatrix();
-
 	auto&& frameCom = _object.GetComponent<ChD3D11::FrameComponent11<CharaType>>();
 
 	if (frameCom == nullptr)return;
@@ -164,6 +164,8 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawMain(ChCpp::FrameObject<Cha
 	auto&& primitives = frameCom->GetPrimitives();
 
 	if (primitives.empty())return;
+
+	ChLMat drawMatrix = _object.GetDrawLHandMatrix();
 
 	auto&& frame = frameCom->GetFrameCom();
 
@@ -187,8 +189,6 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawMain(ChCpp::FrameObject<Cha
 
 		prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
 		prim->indexBuffer.SetIndexBuffer(GetDC());
-
-		polyData.SetWorldMatrix(worldMat);
 
 		polyData.SetFrameMatrix(drawMatrix);
 

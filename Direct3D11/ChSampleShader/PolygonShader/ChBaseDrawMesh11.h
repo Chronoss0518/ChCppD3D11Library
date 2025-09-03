@@ -56,8 +56,6 @@ namespace ChD3D11
 		private://Member Value//
 
 			CB::CBBone11 boneData;
-
-			ChLMat worldMat;
 		};
 	}
 }
