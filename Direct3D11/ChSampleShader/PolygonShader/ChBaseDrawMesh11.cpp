@@ -101,6 +101,9 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawStart(ID3D11DeviceContext* 
 	if (IsDraw())return;
 
 	SamplePolygonShaderBase11::DrawStart(_dc);
+	if (alphaBlendFlg)
+		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
+
 }
 
 template<typename CharaType>
@@ -117,6 +120,7 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::Draw(
 	ChCpp::FrameObject<CharaType>& frame = _mesh;
 	frame.UpdateFunction();
 	DrawUpdate(frame);
+
 }
 
 template<typename CharaType>
@@ -170,9 +174,6 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawMain(ChCpp::FrameObject<Cha
 	auto&& frame = frameCom->GetFrameCom();
 
 	unsigned int offsets = 0;
-
-	if (alphaBlendFlg)
-		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
 
 	for (auto&& prim : primitives)
 	{
