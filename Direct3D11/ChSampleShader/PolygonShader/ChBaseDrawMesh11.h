@@ -18,7 +18,6 @@ namespace ChD3D11
 		template<typename CharaType>
 		class BaseDrawMesh11 final :public SamplePolygonShaderBase11
 		{
-
 		public://Constructor Destructor//
 
 			virtual ~BaseDrawMesh11();
