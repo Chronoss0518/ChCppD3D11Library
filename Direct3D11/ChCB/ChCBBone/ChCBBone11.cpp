@@ -19,7 +19,7 @@ void CBBone11::Init(ID3D11Device* _device)
 
 void CBBone11::Release()
 {
-	if (!*this)return;
+	if (!IsInit())return;
 
 	buf.Release();
 	SetInitFlg(false);
