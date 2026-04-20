@@ -25,6 +25,10 @@ namespace ChD3D11
 
 			virtual void Release()override;
 
+		public:
+
+			void CreateDefaultBlender()override;
+
 		public://Set Functions//
 
 			void SetProjectionMatrix(const ChLMat& _mat);
