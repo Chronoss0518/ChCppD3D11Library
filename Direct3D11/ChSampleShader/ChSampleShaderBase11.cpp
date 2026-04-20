@@ -25,38 +25,63 @@ void SampleShaderBase11::Init(ID3D11Device* _device)
 	InitDomainShader();
 	InitComputeShader();
 
-	{
-		D3D11_BLEND_DESC desc;
-		desc.AlphaToCoverageEnable = false;
-		desc.IndependentBlendEnable = false;
-		desc.RenderTarget[0].BlendEnable = true;
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
-		desc.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
-		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		CreateBlender(desc);
-	}
-
-	{
-		D3D11_DEPTH_STENCIL_DESC desc = {
-			true,
-			D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ZERO ,
-			D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS,
-			false,
-			D3D11_DEFAULT_STENCIL_READ_MASK,
-			D3D11_DEFAULT_STENCIL_WRITE_MASK,
-			D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP,
-			D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP
-		};
-
-		CreateDepthStencilTester(desc);
-	}
+	CreateDefaultRasteriser();
+	CreateDefaultBlender();
+	CreateDefaultDepthStencilTester();
 
 	SetInitFlg(true);
+}
+
+void SampleShaderBase11::CreateDefaultRasteriser()
+{
+	D3D11_RASTERIZER_DESC desc
+	{
+		D3D11_FILL_MODE::D3D11_FILL_SOLID,
+		D3D11_CULL_MODE::D3D11_CULL_NONE,
+		true,
+		0,
+		0.0f,
+		0.0f,
+		false,
+		false,
+		true,
+		false
+	};
+
+	CreateRasteriser(desc);
+}
+
+void SampleShaderBase11::CreateDefaultBlender()
+{
+	D3D11_BLEND_DESC desc;
+	desc.AlphaToCoverageEnable = false;
+	desc.IndependentBlendEnable = false;
+	desc.RenderTarget[0].BlendEnable = true;
+	desc.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	desc.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	CreateBlender(desc);
+}
+
+void SampleShaderBase11::CreateDefaultDepthStencilTester()
+{
+	D3D11_DEPTH_STENCIL_DESC desc = {
+		true,
+		D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ZERO ,
+		D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS,
+		false,
+		D3D11_DEFAULT_STENCIL_READ_MASK,
+		D3D11_DEFAULT_STENCIL_WRITE_MASK,
+		D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP,
+		D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP
+	};
+
+	CreateDepthStencilTester(desc);
 }
 
 void SampleShaderBase11::CreateVertexShader(

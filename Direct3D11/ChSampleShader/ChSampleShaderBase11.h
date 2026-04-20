@@ -39,6 +39,20 @@ namespace ChD3D11
 
 			virtual void InitComputeShader() {};
 
+		public:
+
+			void CreateRasteriser(const D3D11_RASTERIZER_DESC& _desc);
+
+			void CreateBlender(const D3D11_BLEND_DESC& _desc);
+
+			void CreateDepthStencilTester(const D3D11_DEPTH_STENCIL_DESC& _desc);
+
+			virtual void CreateDefaultRasteriser();
+
+			virtual void CreateDefaultBlender();
+			
+			virtual void CreateDefaultDepthStencilTester();
+
 		protected://Create Shader Functions//
 
 			void CreateVertexShader(
@@ -66,14 +80,6 @@ namespace ChD3D11
 			void CreateComputeShader(
 				const unsigned char* _shaderByte,
 				unsigned long _shaderByteNum);
-
-		protected://Create Functions//
-
-			void CreateRasteriser(const D3D11_RASTERIZER_DESC& _desc);
-
-			void CreateBlender(const D3D11_BLEND_DESC& _desc);
-
-			void CreateDepthStencilTester(const D3D11_DEPTH_STENCIL_DESC& _desc);
 
 		public://Set Functions//
 
