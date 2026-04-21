@@ -22,14 +22,12 @@ VS_OUT main
 )
 {
 	VS_OUT res;
-
-	res.worldPos = _pos;
-
+	
     float4x4 tmpMat = _blendNum > 0 ?
 		mul(charaDatas.frameMatrix,BlendMatrix(_blendPow, _blendNum)) :
 		charaDatas.frameMatrix;
 	
-	MTWStruct tmp = ModelToWorld(res.worldPos, _uv, _normal, _faceNormal, tmpMat);
+    MTWStruct tmp = ModelToWorld(_pos, _uv, _normal, _faceNormal, tmpMat);
 
 	res.worldPos = tmp.worldPos;
 	res.viewPos = tmp.viewPos;
