@@ -1,5 +1,5 @@
-#ifndef Ch_D3D11_CB_Blur_h
-#define Ch_D3D11_CB_Blur_h
+#ifndef Ch_D3D11_CB_OutLine_h
+#define Ch_D3D11_CB_OutLine_h
 
 #include"../ChCBBase11.h"
 #include"../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/OutLine.hlsli"
