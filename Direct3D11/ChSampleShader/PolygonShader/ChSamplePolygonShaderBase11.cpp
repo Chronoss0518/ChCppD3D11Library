@@ -92,12 +92,14 @@ void SamplePolygonShaderBase11::SetShaderDrawData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
 	polyData.SetVSDrawData(_dc);
+	polyData.SetPSDrawData(_dc);
 }
 
 void SamplePolygonShaderBase11::SetShaderCharaData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
 	polyData.SetVSCharaData(_dc);
+	polyData.SetPSCharaData(_dc);
 }
 
 void SamplePolygonShaderBase11::DrawStart(ID3D11DeviceContext* _dc)
