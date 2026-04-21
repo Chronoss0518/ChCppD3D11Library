@@ -32,6 +32,8 @@ float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChP_Material _mate);
 OutColor main(VS_OUT _in)
 {
 	//ƒJƒƒ‰‚Ì‘O•û‚É‚ ‚é‚©‚Ì”»’è//
+    clip(_in.viewPos.z);
+	
 	FrustumCulling(_in.proPos);
 	
 	OutColor outColor;

@@ -12,6 +12,8 @@
 float4 main(VS_OUT _in) : SV_Target0
 {
 	//ƒJƒƒ‰‚Ì‘O•û‚É‚ ‚é‚©‚Ì”»’è//
+    clip(_in.viewPos.z);
+    
     FrustumCulling(_in.proPos);
 	
     float4 res = GetOutLineColor();
