@@ -25,6 +25,8 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Init(ID3D11Device* _device)
 
 	SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	SetCullMode(D3D11_CULL_FRONT);
+
 	polyData.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
 	boneData.Init(_device);
 	outLineData.Init(_device);
@@ -183,13 +185,6 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawMain(ChCpp::FrameObject
 		if (prim == nullptr)continue;
 
 		auto&& mate11 = *prim->mate;
-
-		polyData.SetMateDiffuse(mate11.mate.diffuse);
-		polyData.SetMateSpecularColor(mate11.mate.specularColor);
-		polyData.SetMateSpecularPower(mate11.mate.specularPower);
-		polyData.SetMateAmbientColor(mate11.mate.ambient);
-
-		polyData.SetShaderMaterialData(GetDC());
 
 		prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
 		prim->indexBuffer.SetIndexBuffer(GetDC());
