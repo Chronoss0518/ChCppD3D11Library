@@ -38,6 +38,7 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::Release()
 {
 	SamplePolygonShaderBase11::Release();
 	polyData.Release();
+	boneData.Release();
 }
 
 template<typename CharaType>
