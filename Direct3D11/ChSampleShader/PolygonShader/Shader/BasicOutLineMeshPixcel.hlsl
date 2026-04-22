@@ -11,6 +11,14 @@
 //’Êí•`‰æ//
 float4 main(VS_OUT _in) : SV_Target0
 {
+#if false
+    
+    float3 camNormal = mul(_in.vertexNormal, (float3x3) drawData.viewMat);
+    
+    clip(camNormal.z);
+
+#endif
+
 	//ƒJƒƒ‰‚Ì‘O•û‚É‚ ‚é‚©‚Ì”»’è//
     clip(_in.viewPos.z);
     
