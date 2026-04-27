@@ -77,7 +77,7 @@ OutColor main(VS_OUT _in)
 	
     AlphaTest(outColor.color.a);
 	
-    outColor.color.rgb = GetLightColor(outColor.color, _in, mate);
+    outColor.highLight.rgb = outColor.color.rgb = GetLightColor(outColor.color, _in, mate);
 	
     outColor.highLight.r = max(outColor.highLight.r - 1.0f, 0.0f);
     outColor.highLight.g = max(outColor.highLight.g - 1.0f, 0.0f);
