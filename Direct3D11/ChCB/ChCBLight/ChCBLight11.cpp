@@ -8,6 +8,8 @@
 using namespace ChD3D11;
 using namespace CB;
 
+#define COLOR_TEXTURE_SIZE 256
+
 void CBLight11::Init(ID3D11Device* _device)
 {
 	Release();
@@ -16,20 +18,13 @@ void CBLight11::Init(ID3D11Device* _device)
 
 	buf.CreateBuffer(_device, LIGHT_DATA_REGISTERNO);
 	{
-		ChVec4 tmpCol[256];
-		for (unsigned long i = 0; i < 256; i++)
+		ChVec4 tmpCol[COLOR_TEXTURE_SIZE];
+		for (unsigned long i = 0; i < COLOR_TEXTURE_SIZE; i++)
 		{
-			tmpCol[i] = ChVec4(i / 256.0f, i / 256.0f, i / 256.0f, 1.0f);
+			tmpCol[i] = ChVec4(i / static_cast<float>(COLOR_TEXTURE_SIZE), i / static_cast<float>(COLOR_TEXTURE_SIZE), i / static_cast<float>(COLOR_TEXTURE_SIZE), 1.0f);
 		}
-		lightPow.CreateColorTexture(GetDevice(), tmpCol, 256, 1);
+		lightPow.CreateColorTexture(GetDevice(), tmpCol, COLOR_TEXTURE_SIZE, 1);
 
-		D3D11_SAMPLER_DESC samp;
-
-		samp.AddressU = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP;
-		samp.AddressV = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP;
-		samp.Filter = D3D11_FILTER::D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
-
-		lightPow.SetSampler(samp);
 	}
 
 	SetInitFlg(true);
