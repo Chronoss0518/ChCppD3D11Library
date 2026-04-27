@@ -102,7 +102,7 @@ float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChP_Material _mate)
 	lightCol.specular.rgb = _mate.speCol;
 	lightCol.specular.a = _mate.spePow;
 
-	return GetDirectionalLightColor(lightCol);
+    return GetLightColor(lightCol);
 
 }
 
