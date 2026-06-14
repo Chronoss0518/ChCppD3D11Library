@@ -138,6 +138,7 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawUpdate(ChCpp::FrameObject<C
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
 {
+	_object.UpdateDrawTransform();
 	auto&& frameCom = _object.GetComponent<ChD3D11::FrameComponent11<CharaType>>();
 
 	if (frameCom == nullptr)return;
