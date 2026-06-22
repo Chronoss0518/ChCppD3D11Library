@@ -2,14 +2,26 @@
 #ifndef Ch_D3D11_DXCo_h
 #define Ch_D3D11_DXCo_h
 
-#include"../ChShaderObject/ChShaderObject11.h"
-#include"../ChShaderParts/ChShaderParts11.h"
-#include"../ChSampleShader/SpriteShader/ChBaseDrawSprite11.h"
-#include"../ChSprite/ChSprite11.h"
-#include"../ChTexture/ChTexture11.h"
-
 namespace ChD3D11
 {
+	namespace Shader
+	{
+		class BaseDrawSprite11;
+	}
+
+	namespace ShaderParts
+	{
+		class ViewPort;
+		class DrawWindow;
+	}
+
+	class DepthStencilTexture11;
+	class TextureBase11;
+	class Texture11;
+	class RenderTarget11;
+	class DepthStencilTexture11;
+	class Sprite11;
+
 
 	//Direct3D11を利用するために作られたクラス//
 	class DirectX3D11 final :public ChCp::Initializer
@@ -39,21 +51,13 @@ namespace ChD3D11
 
 		inline void SetBackColor(const ChVec4& _color)
 		{
-			if (!*this)return;
+			if (!IsInit())return;
 			backColor = _color;
 		}
 
-		inline void SetWindPos(const ChVec2& _pos)
-		{
-			if (!*this)return;
-			view.SetTopLeftPos(_pos);
-		}
+		void SetWindPos(const ChVec2& _pos);
 
-		inline void SetWindSize(const ChVec2& _size)
-		{
-			if (!*this)return;
-			view.SetSize(_size);
-		}
+		void SetWindSize(const ChVec2& _size);
 
 	public://Get Functions//
 
@@ -116,6 +120,8 @@ namespace ChD3D11
 		//描画用デバイス//
 		ID3D11DeviceContext* dContext = nullptr;
 
+		IDXGIFactory* factory = nullptr;
+
 		//保持するWindowデータ//
 		IDXGISwapChain* scWindow = nullptr;
 
@@ -129,18 +135,17 @@ namespace ChD3D11
 		unsigned long createDeviceHeight = 0;
 
 
-		Sprite11 outSprite;
-
-		Shader::BaseDrawSprite11 spriteShader;
+		ChPtr::Shared<Sprite11> outSprite = nullptr;
+		ChPtr::Shared<Shader::BaseDrawSprite11> spriteShader = nullptr;
 
 		//DepthStencilBuffer用//
-		DepthStencilTexture11 dsBuffer;
+		ChPtr::Shared<DepthStencilTexture11> dsBuffer = nullptr;
 
-		ShaderParts::ViewPort view;
+		ChPtr::Shared<ShaderParts::ViewPort> view = nullptr;
 
 		//背景色//
 		ChVec4 backColor = ChVec4(1.0f, 1.0f, 1.0f, 1.0f);
-		ShaderParts::DrawWindow window;
+		ChPtr::Shared<ShaderParts::DrawWindow> window = nullptr;
 	};
 
 	inline DirectX3D11& D3D11API()
