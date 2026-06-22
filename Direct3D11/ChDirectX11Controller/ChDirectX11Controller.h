@@ -4,9 +4,27 @@
 
 namespace ChD3D11
 {
+	namespace Shader
+	{
+		class BaseDrawSprite11;
+	}
+
+	namespace ShaderParts
+	{
+		class ViewPort;
+		class DrawWindow;
+	}
+
+	class DepthStencilTexture11;
+	class TextureBase11;
+	class Texture11;
+	class RenderTarget11;
+	class DepthStencilTexture11;
+	class Sprite11;
+
 
 	//Direct3D11を利用するために作られたクラス//
-	class DirectX3D11:public ChCp::Initializer
+	class DirectX3D11 final :public ChCp::Initializer
 	{
 	public:
 
@@ -29,6 +47,18 @@ namespace ChD3D11
 
 		virtual void Release();
 
+	public://Set Functions//
+
+		inline void SetBackColor(const ChVec4& _color)
+		{
+			if (!IsInit())return;
+			backColor = _color;
+		}
+
+		void SetWindPos(const ChVec2& _pos);
+
+		void SetWindSize(const ChVec2& _size);
+
 	public://Get Functions//
 
 		//Direct3D11をつかさどるデバイスの取得//
@@ -37,7 +67,7 @@ namespace ChD3D11
 		//描画をつかさどるデバイスの取得//
 		inline ID3D11DeviceContext* const GetDC() { return dContext; }
 
-		inline IDXGISwapChain* const GetSC() { return window; }
+		inline IDXGISwapChain* const GetSC() { return scWindow; }
 
 		inline IDXGISurface* const GetSurface() { return surface; }
 
@@ -60,9 +90,20 @@ namespace ChD3D11
 		{
 			if (ChPtr::NullCheck(device))return false;
 			if (ChPtr::NullCheck(dContext))return false;
-			if (ChPtr::NullCheck(window))return false;
+			if (ChPtr::NullCheck(scWindow))return false;
 			return true;
 		}
+
+	public:
+
+		//描画開始前に呼ぶ関数//
+		void DrawStart();
+
+		//すべての描画終了時に呼ぶ関数//
+		void DrawEnd();
+
+		//すべての描画終了時に呼ぶ関数//
+		void DrawEnd(ChD3D11::TextureBase11& _tex);
 
 	protected://Create Fucntions// 
 
@@ -79,8 +120,10 @@ namespace ChD3D11
 		//描画用デバイス//
 		ID3D11DeviceContext* dContext = nullptr;
 
+		IDXGIFactory* factory = nullptr;
+
 		//保持するWindowデータ//
-		IDXGISwapChain* window = nullptr;
+		IDXGISwapChain* scWindow = nullptr;
 
 		//Direct2Dとの互換性を持たせるためのデータ//
 		IDXGISurface* surface = nullptr;
@@ -90,6 +133,19 @@ namespace ChD3D11
 
 		unsigned long createDeviceWitdh = 0;
 		unsigned long createDeviceHeight = 0;
+
+
+		ChPtr::Shared<Sprite11> outSprite = nullptr;
+		ChPtr::Shared<Shader::BaseDrawSprite11> spriteShader = nullptr;
+
+		//DepthStencilBuffer用//
+		ChPtr::Shared<DepthStencilTexture11> dsBuffer = nullptr;
+
+		ChPtr::Shared<ShaderParts::ViewPort> view = nullptr;
+
+		//背景色//
+		ChVec4 backColor = ChVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		ChPtr::Shared<ShaderParts::DrawWindow> window = nullptr;
 	};
 
 	inline DirectX3D11& D3D11API()
