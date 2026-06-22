@@ -2,11 +2,17 @@
 #ifndef Ch_D3D11_DXCo_h
 #define Ch_D3D11_DXCo_h
 
+#include"../ChShaderObject/ChShaderObject11.h"
+#include"../ChShaderParts/ChShaderParts11.h"
+#include"../ChSampleShader/SpriteShader/ChBaseDrawSprite11.h"
+#include"../ChSprite/ChSprite11.h"
+#include"../ChTexture/ChTexture11.h"
+
 namespace ChD3D11
 {
 
 	//Direct3D11を利用するために作られたクラス//
-	class DirectX3D11:public ChCp::Initializer
+	class DirectX3D11 final :public ChCp::Initializer
 	{
 	public:
 
@@ -29,6 +35,26 @@ namespace ChD3D11
 
 		virtual void Release();
 
+	public://Set Functions//
+
+		inline void SetBackColor(const ChVec4& _color)
+		{
+			if (!*this)return;
+			backColor = _color;
+		}
+
+		inline void SetWindPos(const ChVec2& _pos)
+		{
+			if (!*this)return;
+			view.SetTopLeftPos(_pos);
+		}
+
+		inline void SetWindSize(const ChVec2& _size)
+		{
+			if (!*this)return;
+			view.SetSize(_size);
+		}
+
 	public://Get Functions//
 
 		//Direct3D11をつかさどるデバイスの取得//
@@ -37,7 +63,7 @@ namespace ChD3D11
 		//描画をつかさどるデバイスの取得//
 		inline ID3D11DeviceContext* const GetDC() { return dContext; }
 
-		inline IDXGISwapChain* const GetSC() { return window; }
+		inline IDXGISwapChain* const GetSC() { return scWindow; }
 
 		inline IDXGISurface* const GetSurface() { return surface; }
 
@@ -60,9 +86,20 @@ namespace ChD3D11
 		{
 			if (ChPtr::NullCheck(device))return false;
 			if (ChPtr::NullCheck(dContext))return false;
-			if (ChPtr::NullCheck(window))return false;
+			if (ChPtr::NullCheck(scWindow))return false;
 			return true;
 		}
+
+	public:
+
+		//描画開始前に呼ぶ関数//
+		void DrawStart();
+
+		//すべての描画終了時に呼ぶ関数//
+		void DrawEnd();
+
+		//すべての描画終了時に呼ぶ関数//
+		void DrawEnd(ChD3D11::TextureBase11& _tex);
 
 	protected://Create Fucntions// 
 
@@ -80,7 +117,7 @@ namespace ChD3D11
 		ID3D11DeviceContext* dContext = nullptr;
 
 		//保持するWindowデータ//
-		IDXGISwapChain* window = nullptr;
+		IDXGISwapChain* scWindow = nullptr;
 
 		//Direct2Dとの互換性を持たせるためのデータ//
 		IDXGISurface* surface = nullptr;
@@ -90,6 +127,20 @@ namespace ChD3D11
 
 		unsigned long createDeviceWitdh = 0;
 		unsigned long createDeviceHeight = 0;
+
+
+		Sprite11 outSprite;
+
+		Shader::BaseDrawSprite11 spriteShader;
+
+		//DepthStencilBuffer用//
+		DepthStencilTexture11 dsBuffer;
+
+		ShaderParts::ViewPort view;
+
+		//背景色//
+		ChVec4 backColor = ChVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		ShaderParts::DrawWindow window;
 	};
 
 	inline DirectX3D11& D3D11API()

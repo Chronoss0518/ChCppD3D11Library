@@ -31,6 +31,7 @@ void DirectX3D11::Init(
 	const unsigned long _scrW,
 	const unsigned long _scrH)
 {
+	if (IsInit())return;
 	if (ChPtr::NullCheck(_hWnd))return;
 	
 	CreateDevice(_hWnd, _scrW, _scrH);
@@ -39,16 +40,29 @@ void DirectX3D11::Init(
 		PostQuitMessage(0);
 		return;
 	}
-	window->SetFullscreenState(_fullScreenFlg, nullptr);
+	scWindow->SetFullscreenState(_fullScreenFlg, nullptr);
+
+	spriteShader.Init(device);
+	dsBuffer.CreateDepthBuffer(device, _scrW, _scrH);
+	outSprite.Init();
+
+	window.Init(device, scWindow);
+	window.SetSwapEffect(DXGI_SWAP_EFFECT_DISCARD);
+
+	view.SetDrawDepth(0.0f, 1.0f);
+	view.SetTopLeftPos(ChVec2(0.0f, 0.0f));
+	view.SetSize(ChVec2(_scrW, _scrH));
 
 	SetInitFlg(true);
 }
 
 void DirectX3D11::Release()
 {
+	if (!IsInit())return;
+	window.Release();
 	if (ChPtr::NotNullCheck(device)) { device->Release(); device = nullptr; }
 	if (ChPtr::NotNullCheck(dContext)){dContext->ClearState();  dContext->Release(); dContext = nullptr;}
-	if (ChPtr::NotNullCheck(window)) { window->Release(); window = nullptr; }
+	if (ChPtr::NotNullCheck(scWindow)) { scWindow->Release(); scWindow = nullptr; }
 	if (ChPtr::NotNullCheck(surface)) { surface->Release(); surface = nullptr; }
 	if (ChPtr::NotNullCheck(renderTarget)) { renderTarget->Release(); renderTarget = nullptr; }
 
@@ -96,7 +110,7 @@ void DirectX3D11::CreateDevice(
 		1,
 		D3D11_SDK_VERSION,
 		&scd,
-		&window,
+		&scWindow,
 		&device,
 		&rLv,
 		&dContext)))
@@ -105,7 +119,7 @@ void DirectX3D11::CreateDevice(
 		return;
 	};
 
-	if (FAILED(window->GetBuffer(0, IID_PPV_ARGS(&surface))))
+	if (FAILED(scWindow->GetBuffer(0, IID_PPV_ARGS(&surface))))
 	{
 		Release();
 		return;
@@ -113,8 +127,43 @@ void DirectX3D11::CreateDevice(
 
 	ID3D11Texture2D* pBackBuffer = nullptr;
 
-	window->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	scWindow->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	device->CreateRenderTargetView(pBackBuffer, nullptr, &renderTarget);
 
 	pBackBuffer->Release();
+}
+
+void DirectX3D11::DrawStart()
+{
+	if (!*this)return;
+
+	window.SetBackGroundColor(dContext, backColor);
+	dsBuffer.ClearDepthBuffer(dContext);
+	view.SetDrawData(dContext);
+	window.SetDrawData(dContext, dsBuffer.GetDSView());
+}
+
+void DirectX3D11::DrawEnd()
+{
+	if (!*this)return;
+	if (ChPtr::NullCheck(device))return;
+
+	window.SetDrawData(dContext, dsBuffer.GetDSView());
+
+	// バックバッファをプライマリバッファにコピー//
+	window.Draw();
+}
+
+void DirectX3D11::DrawEnd(ChD3D11::TextureBase11& _tex)
+{
+	if (!*this)return;
+	if (ChPtr::NullCheck(device))return;
+
+	window.SetDrawData(dContext, dsBuffer.GetDSView());
+	spriteShader.DrawStart(dContext);
+	spriteShader.Draw(_tex, outSprite);
+	spriteShader.DrawEnd();
+
+	// バックバッファをプライマリバッファにコピー//
+	window.Draw();
 }
