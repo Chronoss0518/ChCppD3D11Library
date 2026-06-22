@@ -45,8 +45,6 @@
 
 //‹óŠÔ‘€ì//
 #include"Direct3D11/ChCameraController/ChCameraController11.h"
-//Object‘€ì//
-#include"Direct3D11/ChShader/ChShader11.h"
 //Component//
 
 //D3DObject//
