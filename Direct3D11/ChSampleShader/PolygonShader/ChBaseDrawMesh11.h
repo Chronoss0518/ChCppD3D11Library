@@ -26,7 +26,7 @@ namespace ChD3D11
 				ChPtr::Shared<ChCpp::FrameObject<CharaType>>targetObject;
 			};
 
-			struct  DrawPrimitiveData11
+			struct DrawPrimitiveData11
 			{
 
 				~DrawPrimitiveData11();
@@ -47,7 +47,7 @@ namespace ChD3D11
 			public://Create Functions//
 
 				//子オブジェクトすべてを作成する。//
-				void CreateAll(ID3D11Device* _device, Mesh11<CharaType>& _rootObject);
+				void Create(ID3D11Device* _device, ChCpp::FrameComponent<CharaType>* _frameComponent, ChCpp::TransformObject<CharaType>& _rootObject);
 
 			public://Set Functions//
 
@@ -89,12 +89,16 @@ namespace ChD3D11
 
 			void InitPixelShader()override;
 
+		public:
+
+			void AddFrameComponent11(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model);
+
 		public://Other Functions//
 
 			void DrawStart(ID3D11DeviceContext* _dc)override;
 
 			void Draw(
-				Mesh11<CharaType>& _mesh,
+				ChCpp::FrameObject<CharaType>& _mesh,
 				const ChLMat& _mat = ChLMat());
 
 			void DrawEnd()override;
