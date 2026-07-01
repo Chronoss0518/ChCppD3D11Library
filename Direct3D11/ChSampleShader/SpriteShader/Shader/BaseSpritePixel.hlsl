@@ -12,7 +12,7 @@ float4 main(VS_OUT _in) : SV_Target0
 {
 	float4 res = _in.color;
 	res *= GetBaseTextureColor(_in.uv);
-    res *= baseColor;
+    res *= spriteData.baseColor;
 	//Out = BaseColor;
     AlphaTest(res.a);
 	
