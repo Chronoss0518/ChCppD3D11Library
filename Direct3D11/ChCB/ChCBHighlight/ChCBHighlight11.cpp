@@ -58,7 +58,7 @@ void CBHighlight11::SetBoostPower(const float& _boostPower)
 	updateFlg = true;
 }
 
-void CBHighlight11::SetBlurData(const ChS_HighLight& _data)
+void CBHighlight11::SetBlurData(const ChHighLightData& _data)
 {
 	blurData = _data;
 	updateFlg = true;
