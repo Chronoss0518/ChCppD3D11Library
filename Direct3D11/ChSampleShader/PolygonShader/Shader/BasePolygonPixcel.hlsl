@@ -25,7 +25,7 @@ struct OutColor
 };
 
 
-float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChP_Material _mate);
+float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterial _mate);
 
 //ピクセルシェダ(PixelShader)//
 //通常描画//
@@ -92,7 +92,7 @@ OutColor main(VS_OUT _in)
 }
 
 
-float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChP_Material _mate)
+float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterial _mate)
 {
 
 	L_BaseColor lightCol;
