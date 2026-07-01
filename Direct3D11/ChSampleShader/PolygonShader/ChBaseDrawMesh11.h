@@ -18,63 +18,6 @@ namespace ChD3D11
 		template<typename CharaType>
 		class BaseDrawMesh11 final :public SamplePolygonShaderBase11
 		{
-		public:
-
-			class FrameComponent11 :public ChCpp::BaseComponent
-			{
-			public:
-
-				struct TargetBoneData11
-				{
-					ChPtr::Shared<ChCpp::TargetBoneData<CharaType>> boneData;
-					ChPtr::Shared<ChCpp::FrameObject<CharaType>>targetObject;
-				};
-
-				struct DrawPrimitiveData11
-				{
-
-					~DrawPrimitiveData11();
-
-					IndexBuffer11 indexBuffer;
-					VertexBuffer11<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexBuffer;
-
-					std::vector<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexArray;
-					std::vector<unsigned long> indexArray;
-
-					ChPtr::Shared<Ch3D::MaterialData<CharaType>> mate;
-					std::map<Ch3D::TextureType, ChPtr::Shared<Texture11>>textures;
-				};
-
-
-			public://Create Functions//
-
-				//子オブジェクトすべてを作成する。//
-				void Create(ID3D11Device* _device, ChCpp::FrameComponent<CharaType>* _frameComponent, ChCpp::TransformObject<CharaType>& _rootObject);
-
-			public://Set Functions//
-
-				void SetBoneData(CB::CBBone11& _bone);
-
-				void SetPrimitives(ChPtr::Shared<DrawPrimitiveData11> _primitive)
-				{
-					primitives.push_back(_primitive);
-				}
-
-				std::vector<ChPtr::Shared<DrawPrimitiveData11>>& GetPrimitives()
-				{
-					return primitives;
-				}
-
-				ChCpp::FrameComponent<CharaType>* GetFrameCom() { return frameCom; }
-
-			private:
-				ChCpp::FrameComponent<CharaType>* frameCom = nullptr;
-				ChLMat boneLMats[16];
-
-				std::vector<ChPtr::Shared<DrawPrimitiveData11>>primitives;
-				std::vector<ChPtr::Shared<TargetBoneData11>>boneList;
-			};
-
 		public://Constructor Destructor//
 
 			virtual ~BaseDrawMesh11();

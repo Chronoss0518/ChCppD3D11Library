@@ -37,6 +37,10 @@ namespace ChD3D11
 
 		public:
 
+			void CreateFrameMesh(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model);
+
+		public:
+
 			void SetOutLineWidth(const float _width);
 
 			void SetOutLineColor(const ChVec4& _color);

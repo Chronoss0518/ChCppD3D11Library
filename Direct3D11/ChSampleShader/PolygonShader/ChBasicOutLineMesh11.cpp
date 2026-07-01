@@ -1,10 +1,14 @@
 #include<Windows.h>
+#include<array>
 #include"../../../../ChCppBaseLibrary/BaseIncluder/ChBase.h"
 #include"../../../BaseIncluder/ChD3D11I.h"
 
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
-#include"../../ChMesh/ChMesh11.h"
+#include"../../ChCB/ChCBPolygon/ChCBPolygon11.h"
+#include"../../ChCB/ChCBBone/ChCBBone11.h"
+
+#include"../../ChFrameComponent/ChFrameComponent11.h"
 
 #include"ChBasicOutLineMesh11.h"
 
@@ -47,20 +51,11 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::InitVertexShader()
 
 #include"../PolygonShader/BasicOutLineMeshVertex.inc"
 
-	D3D11_INPUT_ELEMENT_DESC decl[10];
+	std::array<D3D11_INPUT_ELEMENT_DESC, 10>decl;
 
-	decl[0] = { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,0, 0, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[1] = { "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[2] = { "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[3] = { "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[4] = { "NORMAL",  1, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[5] = { "BLENDINDEX",  0, DXGI_FORMAT_R32_UINT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[6] = { "BLENDWEIGHT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[7] = { "BLENDWEIGHT",  1, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[8] = { "BLENDWEIGHT",  2, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[9] = { "BLENDWEIGHT",  3, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
+	FrameComponent11<CharaType>::CreateInputElements<10>(decl);
 
-	SamplePolygonShaderBase11::CreateVertexShader(decl, sizeof(decl) / sizeof(D3D11_INPUT_ELEMENT_DESC), main, sizeof(main));
+	SamplePolygonShaderBase11::CreateVertexShader(&decl[0], decl.size(), main, sizeof(main));
 }
 
 template<typename CharaType>
@@ -69,6 +64,12 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::InitPixelShader()
 #include"../PolygonShader/BasicOutLineMeshPixcel.inc"
 
 	SamplePolygonShaderBase11::CreatePixelShader(main, sizeof(main));
+}
+
+template<typename CharaType>
+void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::CreateFrameMesh(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model)
+{
+	FrameComponent11<CharaType>::CreateFrameMesh(GetDevice(), _model);
 }
 
 template<typename CharaType>
