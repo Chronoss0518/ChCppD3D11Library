@@ -30,7 +30,7 @@ void CBPolygon11::Init(
 	charaBuf.CreateBuffer(GetDevice(), CHARACTOR_DATA_REGISTERNO);
 	mateBuf.CreateBuffer(GetDevice(), MATERIAL_DATA_REGISTERNO);
 
-	charaData.alphaTestValue = 0.1f;
+	drawData.alphaTestValue = 0.1f;
 	defaultBase = _defaultBase;
 	defaultNormal = _defaultNormal;
 
@@ -201,7 +201,7 @@ void CBPolygon11::SetShaderTexture(ID3D11DeviceContext* _dc)
 	if (!*this)return;
 
 	CBBase11::SetShaderTexture(_dc, baseTex, *defaultBase, BASE_TEXTURE_REGISTER);
-	CBBase11::SetShaderTexture(_dc, normalTex, *defaultNormal, NORMAL_TEXTURE_REGISTER);
+	//CBBase11::SetShaderTexture(_dc, normalTex, *defaultNormal, NORMAL_TEXTURE_REGISTER);
 }
 
 void CBPolygon11::UpdateDD(ID3D11DeviceContext* _dc)

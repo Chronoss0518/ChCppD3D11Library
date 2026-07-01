@@ -117,7 +117,7 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Draw(
 	if (!IsDraw())return;
 	if (ChPtr::NullCheck(GetDC()))return;
 
-	if (outLineData.GetOutLineColor().a <= polyData.GetCharaData().alphaTestValue)return;
+	if (outLineData.GetOutLineColor().a <= polyData.GetDrawData().alphaTestValue)return;
 	if (outLineData.GetWidth() <= MIN_WIDTH)return;
 
 	polyData.SetWorldMatrix(_mat);
