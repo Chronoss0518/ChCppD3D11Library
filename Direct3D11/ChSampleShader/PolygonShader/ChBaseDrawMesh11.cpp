@@ -14,7 +14,7 @@
 #include"ChBaseDrawMesh11.h"
 
 template<typename CharaType>
-ChD3D11::Shader::BaseDrawMesh11<CharaType>::DrawPrimitiveData11::~DrawPrimitiveData11()
+ChD3D11::Shader::BaseDrawMesh11<CharaType>::FrameComponent11::DrawPrimitiveData11::~DrawPrimitiveData11()
 {
 	vertexBuffer.Release();
 	indexBuffer.Release();
@@ -189,15 +189,21 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::InitPixelShader()
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMesh11<CharaType>::AddFrameComponent11(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model)
+void ChD3D11::Shader::BaseDrawMesh11<CharaType>::CreateFrameMesh(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model)
 {
 	auto&& frameBase = _model->GetComponent<ChCpp::FrameComponent<CharaType>>();
 
 	if (frameBase != nullptr)
 	{
-		auto&& com = _model->SetComponent<FrameComponent11>();
+		auto com = _model->GetComponent<FrameComponent11>();
 
-		com->Create(GetDevice(), frameBase.get(), *_model);
+		if (com == nullptr)
+		{
+			com = _model->SetComponent<FrameComponent11>();
+			
+			com->Create(GetDevice(), frameBase.get(), *_model);
+		}
+
 	}
 
 	for (auto&& cbildObj : _model->GetAllChildlen())
@@ -206,7 +212,7 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::AddFrameComponent11(ChPtr::Shar
 
 		if (child == nullptr)continue;
 
-		AddFrameComponent11(child);
+		CreateFrameMesh(child);
 	}
 }
 

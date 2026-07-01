@@ -166,6 +166,7 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawUpdate(ChCpp::FrameObje
 template<typename CharaType>
 void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
 {
+#if 0
 	auto&& frameCom = _object.GetComponent<ChD3D11::FrameComponent11<CharaType>>();
 
 	if (frameCom == nullptr)return;
@@ -205,6 +206,7 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawMain(ChCpp::FrameObject
 		GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()), 1, 0, 0, 0);
 
 	}
+#endif
 }
 
 template<typename CharaType>

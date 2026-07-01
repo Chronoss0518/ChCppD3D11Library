@@ -20,30 +20,32 @@ namespace ChD3D11
 		{
 		public:
 
-			struct TargetBoneData11
-			{
-				ChPtr::Shared<ChCpp::TargetBoneData<CharaType>> boneData;
-				ChPtr::Shared<ChCpp::FrameObject<CharaType>>targetObject;
-			};
-
-			struct DrawPrimitiveData11
-			{
-
-				~DrawPrimitiveData11();
-
-				ChLMat drawMat;
-				IndexBuffer11 indexBuffer;
-				VertexBuffer11<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexBuffer;
-
-				std::vector<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexArray;
-				std::vector<unsigned long> indexArray;
-
-				ChPtr::Shared<Ch3D::MaterialData<CharaType>> mate;
-				std::map<Ch3D::TextureType, ChPtr::Shared<Texture11>>textures;
-			};
-
 			class FrameComponent11 :public ChCpp::BaseComponent
 			{
+			public:
+
+				struct TargetBoneData11
+				{
+					ChPtr::Shared<ChCpp::TargetBoneData<CharaType>> boneData;
+					ChPtr::Shared<ChCpp::FrameObject<CharaType>>targetObject;
+				};
+
+				struct DrawPrimitiveData11
+				{
+
+					~DrawPrimitiveData11();
+
+					IndexBuffer11 indexBuffer;
+					VertexBuffer11<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexBuffer;
+
+					std::vector<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexArray;
+					std::vector<unsigned long> indexArray;
+
+					ChPtr::Shared<Ch3D::MaterialData<CharaType>> mate;
+					std::map<Ch3D::TextureType, ChPtr::Shared<Texture11>>textures;
+				};
+
+
 			public://Create Functions//
 
 				//子オブジェクトすべてを作成する。//
@@ -91,7 +93,7 @@ namespace ChD3D11
 
 		public:
 
-			void AddFrameComponent11(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model);
+			void CreateFrameMesh(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model);
 
 		public://Other Functions//
 
