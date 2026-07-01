@@ -52,7 +52,7 @@ void CBBlur11::SetLiteBlurFlg(const bool _flg)
 	updateFlg = true;
 }
 
-void CBBlur11::SetBlurData(const ChS_Blur& _data)
+void CBBlur11::SetBlurData(const ChBlurData& _data)
 {
 	blurData = _data;
 	updateFlg = true;
