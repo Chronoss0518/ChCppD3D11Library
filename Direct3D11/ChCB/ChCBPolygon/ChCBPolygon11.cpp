@@ -106,19 +106,19 @@ void CBPolygon11::SetMateAmbientColor(const ChVec3& _ambientCol)
 	mUpdateFlg = true;
 }
 
-void CBPolygon11::SetDrawData(const ChP_DrawData& _data)
+void CBPolygon11::SetDrawData(const ChDrawData& _data)
 {
 	drawData = _data;
 	dUpdateFlg = true;
 }
 
-void CBPolygon11::SetCharaData(const ChP_CharaData& _data)
+void CBPolygon11::SetCharaData(const ChCharaData& _data)
 {
 	charaData = _data;
 	cUpdateFlg = true;
 }
 
-void CBPolygon11::SetMaterialData(const ChP_Material& _data)
+void CBPolygon11::SetMaterialData(const ChMaterial& _data)
 {
 	mateData = _data;
 	mUpdateFlg = true;

@@ -50,11 +50,11 @@ namespace ChD3D11
 
 			inline void SetNormalTexture(TextureBase11* _tex) { normalTex = _tex; }
 
-			void SetDrawData(const ChP_DrawData& _data);
+			void SetDrawData(const ChDrawData& _data);
 
-			void SetCharaData(const ChP_CharaData& _data);
+			void SetCharaData(const ChCharaData& _data);
 
-			void SetMaterialData(const ChP_Material& _data);
+			void SetMaterialData(const ChMaterial& _data);
 
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
@@ -78,13 +78,13 @@ namespace ChD3D11
 
 		public://Get Functions//
 
-			inline ChP_DrawData GetDrawData() { return drawData; }
+			inline ChDrawData GetDrawData() { return drawData; }
 
 			inline ChLMat GetProjectionMatrix() { return drawData.proMat; }
 
 			inline ChLMat GetViewMatrix() { return drawData.viewMat; }
 
-			inline ChP_CharaData GetCharaData() { return charaData; }
+			inline ChCharaData GetCharaData() { return charaData; }
 
 			inline ChLMat GetWorldMatrix() { return charaData.worldMat; }
 
@@ -102,14 +102,14 @@ namespace ChD3D11
 
 		private://Member Value
 
-			ChP_DrawData drawData;
-			ConstantBuffer11<ChP_DrawData> drawBuf;
+			ChDrawData drawData;
+			ConstantBuffer11<ChDrawData> drawBuf;
 			bool dUpdateFlg = true;
-			ChP_CharaData charaData;
-			ConstantBuffer11<ChP_CharaData> charaBuf;
+			ChCharaData charaData;
+			ConstantBuffer11<ChCharaData> charaBuf;
 			bool cUpdateFlg = true;
-			ChP_Material mateData;
-			ConstantBuffer11<ChP_Material> mateBuf;
+			ChMaterial mateData;
+			ConstantBuffer11<ChMaterial> mateBuf;
 			bool mUpdateFlg = true;
 
 			TextureBase11* baseTex = nullptr;
