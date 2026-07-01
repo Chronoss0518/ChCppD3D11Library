@@ -30,7 +30,7 @@ namespace ChD3D11
 
 			inline void SetBaseTexture(TextureBase11* _tex) { baseTex = _tex; }
 
-			void SetSpriteData(const ChS_SpriteData& _data);
+			void SetSpriteData(const ChSpriteData& _data);
 
 			void SetPSSpriteData(ID3D11DeviceContext* _dc);
 
@@ -42,7 +42,7 @@ namespace ChD3D11
 
 		public://Get Functions//
 
-			inline ChS_SpriteData GetSpriteData() { return spData; }
+			inline ChSpriteData GetSpriteData() { return spData; }
 
 			inline ChLMat GetSpriteMatrix() { return spData.spriteMat; }
 
@@ -54,8 +54,8 @@ namespace ChD3D11
 
 		private://Member Value//
 
-			ChS_SpriteData spData;
-			ConstantBuffer11<ChS_SpriteData> spBuf;
+			ChSpriteData spData;
+			ConstantBuffer11<ChSpriteData> spBuf;
 			bool sUpdateFlg = true;
 
 			TextureBase11* baseTex = nullptr;

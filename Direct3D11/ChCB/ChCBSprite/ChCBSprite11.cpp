@@ -45,7 +45,7 @@ void CBSprite11::SetBaseColor(const ChVec4& _color)
 	sUpdateFlg = true;
 }
 
-void CBSprite11::SetSpriteData(const ChS_SpriteData& _data)
+void CBSprite11::SetSpriteData(const ChSpriteData& _data)
 {
 	spData = _data;
 	sUpdateFlg = true;
