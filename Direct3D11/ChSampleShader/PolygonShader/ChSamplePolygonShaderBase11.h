@@ -1,7 +1,6 @@
 #ifndef Ch_D3D11_SS_SamplePolygonShaderBase_h
 #define Ch_D3D11_SS_SamplePolygonShaderBase_h
 
-#include"../../ChCB/ChCBPolygon/ChCBPolygon11.h"
 #include"../ChSampleShaderBase11.h"
 
 namespace ChD3D11
