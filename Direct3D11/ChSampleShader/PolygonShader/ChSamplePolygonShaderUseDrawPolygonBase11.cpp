@@ -27,7 +27,7 @@ void SamplePolygonShaderUseDrawPolygonBase11::Release()
 {
 	if (!IsInit())return;
 
-	SampleShaderBase11::Release();
+	SamplePolygonShaderBase11::Release();
 	polyData.Release();
 }
 
