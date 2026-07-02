@@ -1,7 +1,7 @@
 #ifndef Ch_D3D11_SS_BaseMesh_h
 #define Ch_D3D11_SS_BaseMesh_h
 
-#include"ChSamplePolygonShaderBase11.h"
+#include"ChSamplePolygonShaderUseDrawPolygonBase11.h"
 
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
@@ -16,7 +16,7 @@ namespace ChD3D11
 	namespace Shader
 	{
 		template<typename CharaType>
-		class BaseDrawMesh11 final :public SamplePolygonShaderBase11
+		class BaseDrawMesh11 final :public SamplePolygonShaderUseDrawPolygonBase11
 		{
 		public://Constructor Destructor//
 
