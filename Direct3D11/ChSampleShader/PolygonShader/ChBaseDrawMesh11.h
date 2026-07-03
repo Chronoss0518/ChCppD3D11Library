@@ -6,7 +6,6 @@
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
 #include"../../ChTexture/ChTexture11.h"
-#include"../../ChMesh/ChMesh11.h"
 
 #include"../../ChCB/ChCBBone/ChCBBone11.h"
 
