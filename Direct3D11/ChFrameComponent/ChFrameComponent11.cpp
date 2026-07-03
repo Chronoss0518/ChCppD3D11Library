@@ -63,7 +63,7 @@ void ChD3D11::FrameComponent11<CharaType>::Create(ID3D11Device* _device, ChCpp::
 
 			auto&& tmpVertex = *_frameComponent->vertexList[vertexNo];
 
-			Ch3D::SkinMeshVertex<BONE_MAX_NUM> mVertex;
+			Ch3D::SkinMeshVertex<CH_BB_BONE_MAX_NUM> mVertex;
 			Ch3D::SetPosition(&mVertex, tmpVertex.pos);
 			Ch3D::SetUV(&mVertex, vertex->uv);
 			Ch3D::SetColor(&mVertex, tmpVertex.color);
