@@ -29,33 +29,37 @@ namespace ChD3D11
 
 		public://Set Functions//
 
-			void SetFrameMatrix(const ChLMat& _mat,unsigned int _num);
-
-			void SetWorldMatrix(const ChLMat& _mat, unsigned int _num);
-
-			void SetMoveUV(const ChVec2& _move, unsigned int _num);
-
 			void SetViewMatrix(const ChLMat& _mat);
 
 			void SetProjectionMatrix(const ChLMat& _mat);
 
-			void SetMateDiffuse(const ChVec4& _diffuseCol, unsigned int _num);
+			void SetWorldMatrix(const ChLMat& _mat);
 
-			void SetMateSpecularColor(const ChVec3& _specularCol, unsigned int _num);
+			void SetFrameMatrix(const ChLMat& _mat,unsigned long _num);
 
-			void SetMateSpecularPower(const float _specularPow, unsigned int _num);
+			void SetDrwaFlags(const bool _flg, unsigned long _num);
 
-			void SetMateAmbientColor(const ChVec3& _ambientCol, unsigned int _num);
+			void SetMoveUV(const ChVec2& _move, unsigned long _num);
 
-			void SetBaseTexture(TextureBase11* _tex, unsigned int _num);
+			void SetMateDiffuse(const ChVec4& _diffuseCol, unsigned long _num);
 
-			void SetNormalTexture(TextureBase11* _tex, unsigned int _num);
+			void SetMateSpecularColor(const ChVec3& _specularCol, unsigned long _num);
+
+			void SetMateSpecularPower(const float _specularPow, unsigned long _num);
+
+			void SetMateAmbientColor(const ChVec3& _ambientCol, unsigned long _num);
+
+			void SetBaseTexture(TextureBase11* _tex, unsigned long _num);
+
+			void SetNormalTexture(TextureBase11* _tex, unsigned long _num);
 
 			void SetDrawData(const ChDrawData& _data);
 
-			void SetCharaData(const ChCharaData& _data, unsigned int _num);
+			void SetModelData(const ChModelData& _data);
 
-			void SetMaterialData(const ChMaterial& _data, unsigned int _num);
+			void SetCharaData(const ChFrameData& _data, const bool _flg, unsigned long _num);
+
+			void SetMaterialData(const ChMaterial& _data, unsigned long _num);
 
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
@@ -63,11 +67,17 @@ namespace ChD3D11
 
 			void SetShaderDrawData(ID3D11DeviceContext* _dc);
 
-			void SetPSCharaData(ID3D11DeviceContext* _dc);
+			void SetPSModelData(ID3D11DeviceContext* _dc);
 
-			void SetVSCharaData(ID3D11DeviceContext* _dc);
+			void SetVSModelData(ID3D11DeviceContext* _dc);
 
-			void SetShaderCharaData(ID3D11DeviceContext* _dc);
+			void SetShaderModelData(ID3D11DeviceContext* _dc);
+
+			void SetPSFrameData(ID3D11DeviceContext* _dc);
+
+			void SetVSFrameData(ID3D11DeviceContext* _dc);
+
+			void SetShaderFrameData(ID3D11DeviceContext* _dc);
 
 			void SetPSMaterialData(ID3D11DeviceContext* _dc);
 
@@ -85,9 +95,9 @@ namespace ChD3D11
 
 			inline ChLMat GetViewMatrix() { return drawData.viewMat; }
 
-			inline ChCharaDatas GetCharaDatas() { return charaData; }
+			inline ChFrameDatas GetCharaDatas() { return charaData; }
 
-			ChLMat GetWorldMatrix(unsigned int _num);
+			ChLMat GetWorldMatrix();
 
 			ChLMat GetFrameMatrix(unsigned int _num);
 
@@ -97,21 +107,26 @@ namespace ChD3D11
 
 			void UpdateDD(ID3D11DeviceContext* _dc);
 
-			void UpdateCD(ID3D11DeviceContext* _dc);
+			void UpdateMoD(ID3D11DeviceContext* _dc);
 
-			void UpdateMD(ID3D11DeviceContext* _dc);
+			void UpdateFD(ID3D11DeviceContext* _dc);
+
+			void UpdateMaD(ID3D11DeviceContext* _dc);
 
 		private://Member Value
 
 			ChDrawData drawData;
 			ConstantBuffer11<ChDrawData> drawBuf;
 			bool dUpdateFlg = true;
-			ChCharaDatas charaData;
-			ConstantBuffer11<ChCharaDatas> charaBuf;
-			bool cUpdateFlg = true;
+			ChModelData modelData;
+			ConstantBuffer11<ChModelData> modelBuf;
+			bool moUpdateFlg = true;
+			ChFrameDatas frameData;
+			ConstantBuffer11<ChFrameDatas> frameBuf;
+			bool fUpdateFlg = true;
 			ChMaterials mateData;
 			ConstantBuffer11<ChMaterials> mateBuf;
-			bool mUpdateFlg = true;
+			bool maUpdateFlg = true;
 
 			std::vector<TextureBase11*> baseTex;
 			std::vector<TextureBase11*> normalTex;
