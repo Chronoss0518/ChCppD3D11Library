@@ -13,7 +13,7 @@ void CBHighlight11::Init(ID3D11Device* _device)
 	if (IsInit())return;
 
 	CBBase11::Init(_device);
-	blurBuf.CreateBuffer(GetDevice(), HIGHLIGHT_DATA_REGISTERNO);
+	blurBuf.CreateBuffer(GetDevice(), CH_HL_HIGHLIGHT_DATA_REGISTERNO);
 	SetInitFlg(true);
 }
 
