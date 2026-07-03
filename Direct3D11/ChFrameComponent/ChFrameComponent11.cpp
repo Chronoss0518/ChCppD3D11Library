@@ -26,7 +26,7 @@ void ChD3D11::FrameComponent11<CharaType>::Create(ID3D11Device* _device, ChCpp::
 
 	frameCom = _frameComponent;
 
-	for (auto&& material : _frameComponent->materialList)
+	for (auto&& material : frameCom->materialList)
 	{
 		auto&& primitive11 = ChPtr::Make_S<DrawPrimitiveData11>();
 		primitive11->mate = material;
@@ -50,18 +50,17 @@ void ChD3D11::FrameComponent11<CharaType>::Create(ID3D11Device* _device, ChCpp::
 		primitives.push_back(primitive11);
 	}
 
-	for (auto&& primitive : _frameComponent->primitives)
+	for (auto&& primitive : frameCom->primitives)
 	{
 		auto&& primitive11 = primitives[primitive->mateNo];
 
 		size_t firstIndex = primitive11->vertexArray.size();
-		size_t indexCount = 0;
 
 		for (auto&& vertex : primitive->vertexData)
 		{
 			size_t vertexNo = vertex->vertexNo;
 
-			auto&& tmpVertex = *_frameComponent->vertexList[vertexNo];
+			auto&& tmpVertex = *frameCom->vertexList[vertexNo];
 
 			Ch3D::SkinMeshVertex<CH_BB_BONE_MAX_NUM> mVertex;
 			mVertex.pos = tmpVertex.pos;
@@ -77,10 +76,9 @@ void ChD3D11::FrameComponent11<CharaType>::Create(ID3D11Device* _device, ChCpp::
 
 			primitive11->vertexArray.push_back(mVertex);
 
-			indexCount++;
 		}
 
-		for (unsigned long i = 1; i < indexCount - 1; i++)
+		for (size_t i = 1; i < primitive->vertexData.size() - 1; i++)
 		{
 			primitive11->indexArray.push_back(static_cast<unsigned long>(firstIndex));
 			primitive11->indexArray.push_back(static_cast<unsigned long>(firstIndex + i));
@@ -105,7 +103,7 @@ void ChD3D11::FrameComponent11<CharaType>::Create(ID3D11Device* _device, ChCpp::
 			static_cast<unsigned long>(prim->vertexArray.size()));
 	}
 
-	for (auto boneData : _frameComponent->boneDatas)
+	for (auto boneData : frameCom->boneDatas)
 	{
 		auto bone = ChPtr::Make_S<TargetBoneData11>();
 		bone->boneData = boneData;
