@@ -162,7 +162,7 @@ void CBMultiplePolygon11::SetCharaData(const ChFrameData& _data, const bool _flg
 	fUpdateFlg = true;
 }
 
-void CBMultiplePolygon11::SetMaterialData(const ChMaterial& _data, unsigned long _num)
+void CBMultiplePolygon11::SetMaterialData(const ChMaterialData& _data, unsigned long _num)
 {
 	if (_num < 0 || _num >= CH_DMP_MAX_FRAME_COUNT)return;
 	mateData.datas[_num] = _data;

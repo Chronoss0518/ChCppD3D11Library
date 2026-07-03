@@ -28,15 +28,15 @@ namespace ChD3D11
 
 		public://Set Functions//
 
-			void SetFrameMatrix(const ChLMat& _mat);
-
-			void SetWorldMatrix(const ChLMat& _mat);
-
-			void SetMoveUV(const ChVec2& _move);
-
 			void SetViewMatrix(const ChLMat& _mat);
 
 			void SetProjectionMatrix(const ChLMat& _mat);
+
+			void SetWorldMatrix(const ChLMat& _mat);
+
+			void SetFrameMatrix(const ChLMat& _mat);
+
+			void SetMoveUV(const ChVec2& _move);
 
 			void SetMateDiffuse(const ChVec4& _diffuseCol);
 
@@ -52,9 +52,11 @@ namespace ChD3D11
 
 			void SetDrawData(const ChDrawData& _data);
 
-			void SetCharaData(const ChCharaData& _data);
+			void SetModelData(const ChModelData& _data);
 
-			void SetMaterialData(const ChMaterial& _data);
+			void SetFrameData(const ChFrameData& _data);
+
+			void SetMaterialData(const ChMaterialData& _data);
 
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
@@ -62,11 +64,17 @@ namespace ChD3D11
 
 			void SetShaderDrawData(ID3D11DeviceContext* _dc);
 
-			void SetPSCharaData(ID3D11DeviceContext* _dc);
+			void SetPSModelData(ID3D11DeviceContext* _dc);
 
-			void SetVSCharaData(ID3D11DeviceContext* _dc);
+			void SetVSModelData(ID3D11DeviceContext* _dc);
 
-			void SetShaderCharaData(ID3D11DeviceContext* _dc);
+			void SetShaderModelData(ID3D11DeviceContext* _dc);
+
+			void SetPSFrameData(ID3D11DeviceContext* _dc);
+
+			void SetVSFrameData(ID3D11DeviceContext* _dc);
+
+			void SetShaderFrameData(ID3D11DeviceContext* _dc);
 
 			void SetPSMaterialData(ID3D11DeviceContext* _dc);
 
@@ -84,33 +92,40 @@ namespace ChD3D11
 
 			inline ChLMat GetViewMatrix() { return drawData.viewMat; }
 
-			inline ChCharaData GetCharaData() { return charaData; }
+			inline ChModelData GetModelData() { return modelData; }
 
-			inline ChLMat GetWorldMatrix() { return charaData.worldMat; }
+			inline ChLMat GetWorldMatrix() { return modelData.worldMat; }
 
-			inline ChLMat GetFrameMatrix() { return charaData.frameMatrix; }
+			inline ChFrameData GetCharaData() { return frameData; }
 
-			inline ChVec2 GetMoveUV() { return charaData.moveUV; }
+			inline ChLMat GetFrameMatrix() { return frameData.frameMatrix; }
+
+			inline ChVec2 GetMoveUV() { return mateData.moveUV; }
 
 		public://Update Function//
 
 			void UpdateDD(ID3D11DeviceContext* _dc);
 
-			void UpdateCD(ID3D11DeviceContext* _dc);
+			void UpdateMoD(ID3D11DeviceContext* _dc);
 
-			void UpdateMD(ID3D11DeviceContext* _dc);
+			void UpdateFD(ID3D11DeviceContext* _dc);
+
+			void UpdateMaD(ID3D11DeviceContext* _dc);
 
 		private://Member Value
 
 			ChDrawData drawData;
 			ConstantBuffer11<ChDrawData> drawBuf;
 			bool dUpdateFlg = true;
-			ChCharaData charaData;
-			ConstantBuffer11<ChCharaData> charaBuf;
-			bool cUpdateFlg = true;
-			ChMaterial mateData;
-			ConstantBuffer11<ChMaterial> mateBuf;
-			bool mUpdateFlg = true;
+			ChModelData modelData;
+			ConstantBuffer11<ChModelData> modelBuf;
+			bool moUpdateFlg = true;
+			ChFrameData frameData;
+			ConstantBuffer11<ChFrameData> frameBuf;
+			bool fUpdateFlg = true;
+			ChMaterialData mateData;
+			ConstantBuffer11<ChMaterialData> mateBuf;
+			bool maUpdateFlg = true;
 
 			TextureBase11* baseTex = nullptr;
 			TextureBase11* normalTex = nullptr;

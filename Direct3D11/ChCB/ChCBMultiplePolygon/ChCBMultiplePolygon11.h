@@ -59,7 +59,7 @@ namespace ChD3D11
 
 			void SetCharaData(const ChFrameData& _data, const bool _flg, unsigned long _num);
 
-			void SetMaterialData(const ChMaterial& _data, unsigned long _num);
+			void SetMaterialData(const ChMaterialData& _data, unsigned long _num);
 
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
@@ -95,7 +95,7 @@ namespace ChD3D11
 
 			inline ChLMat GetViewMatrix() { return drawData.viewMat; }
 
-			inline ChFrameDatas GetCharaDatas() { return charaData; }
+			inline ChFrameDatas GetFrameDatas() { return frameData; }
 
 			ChLMat GetWorldMatrix();
 
@@ -124,8 +124,8 @@ namespace ChD3D11
 			ChFrameDatas frameData;
 			ConstantBuffer11<ChFrameDatas> frameBuf;
 			bool fUpdateFlg = true;
-			ChMaterials mateData;
-			ConstantBuffer11<ChMaterials> mateBuf;
+			ChMaterialDatas mateData;
+			ConstantBuffer11<ChMaterialDatas> mateBuf;
 			bool maUpdateFlg = true;
 
 			std::vector<TextureBase11*> baseTex;
