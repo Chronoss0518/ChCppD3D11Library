@@ -23,9 +23,9 @@ namespace ChD3D11
 			~DrawPrimitiveData11();
 
 			IndexBuffer11 indexBuffer;
-			VertexBuffer11<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexBuffer;
+			VertexBuffer11<Ch3D::SkinMeshVertex<CH_BB_BONE_MAX_NUM>> vertexBuffer;
 
-			std::vector<Ch3D::SkinMeshVertex<BONE_MAX_NUM>> vertexArray;
+			std::vector<Ch3D::SkinMeshVertex<CH_BB_BONE_MAX_NUM>> vertexArray;
 			std::vector<unsigned long> indexArray;
 
 			ChPtr::Shared<Ch3D::MaterialData<CharaType>> mate;
