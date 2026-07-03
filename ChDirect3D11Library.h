@@ -19,7 +19,6 @@
 
 //Object本体//
 #include"Direct3D11/ChTexture/ChTexture11.h"
-#include"Direct3D11/ChMesh/ChMesh11.h"
 #include"Direct3D11/ChPolygonBoard/ChPolygonBoard11.h"
 #include"Direct3D11/ChSprite/ChSprite11.h"
 //ライブラリで用意したShaderを利用するクラス//
