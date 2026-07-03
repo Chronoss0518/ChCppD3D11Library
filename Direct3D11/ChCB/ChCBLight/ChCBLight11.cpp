@@ -16,7 +16,7 @@ void CBLight11::Init(ID3D11Device* _device)
 
 	CBBase11::Init(_device);
 
-	buf.CreateBuffer(_device, LIGHT_DATA_REGISTERNO);
+	buf.CreateBuffer(_device, CH_L_LIGHT_DATA_REGISTERNO);
 	{
 		ChVec4 tmpCol[COLOR_TEXTURE_SIZE];
 		for (unsigned long i = 0; i < COLOR_TEXTURE_SIZE; i++)
@@ -90,7 +90,7 @@ void CBLight11::SetDirectionLightData(const ChDirectionalLight& _data)
 
 void CBLight11::SetPLightPos(const ChVec3& _pos, const unsigned long _no)
 {
-	if (_no > LIGHT_PLIGHTCOUNT)return;
+	if (_no > CH_L_LIGHT_PLIGHTCOUNT)return;
 
 	lightDatas.pLight[_no].pos = _pos;
 	updateFlg = true;
@@ -98,7 +98,7 @@ void CBLight11::SetPLightPos(const ChVec3& _pos, const unsigned long _no)
 
 void CBLight11::SetPLightLen(const float _len, const unsigned long _no)
 {
-	if (_no > LIGHT_PLIGHTCOUNT)return;
+	if (_no > CH_L_LIGHT_PLIGHTCOUNT)return;
 
 	lightDatas.pLight[_no].len = _len;
 	updateFlg = true;
@@ -106,7 +106,7 @@ void CBLight11::SetPLightLen(const float _len, const unsigned long _no)
 
 void CBLight11::SetPLightDiffuse(const ChVec3& _dif, const unsigned long _no)
 {
-	if (_no > LIGHT_PLIGHTCOUNT)return;
+	if (_no > CH_L_LIGHT_PLIGHTCOUNT)return;
 
 	lightDatas.pLight[_no].dif = _dif;
 	updateFlg = true;
@@ -114,7 +114,7 @@ void CBLight11::SetPLightDiffuse(const ChVec3& _dif, const unsigned long _no)
 
 void CBLight11::SetPLightUseFlg(const bool& _flg, const unsigned long _no)
 {
-	if (_no > LIGHT_PLIGHTCOUNT)return;
+	if (_no > CH_L_LIGHT_PLIGHTCOUNT)return;
 
 	lightDatas.pLight[_no].useFlg = _flg;
 	updateFlg = true;
@@ -122,7 +122,7 @@ void CBLight11::SetPLightUseFlg(const bool& _flg, const unsigned long _no)
 
 void CBLight11::SetPointLightData(const bool _useFlg, const ChVec3& _dif, const ChVec3& _pos, const float _len, const unsigned long _no)
 {
-	if (_no > LIGHT_PLIGHTCOUNT)return;
+	if (_no > CH_L_LIGHT_PLIGHTCOUNT)return;
 
 	lightDatas.pLight[_no].useFlg = _useFlg;
 	lightDatas.pLight[_no].dif = _dif;
@@ -134,7 +134,7 @@ void CBLight11::SetPointLightData(const bool _useFlg, const ChVec3& _dif, const 
 
 void CBLight11::SetPointLightData(const ChPointLight& _data, const unsigned long _no)
 {
-	if (_no > LIGHT_PLIGHTCOUNT)return;
+	if (_no > CH_L_LIGHT_PLIGHTCOUNT)return;
 
 	lightDatas.pLight[_no] = _data;
 	updateFlg = true;
@@ -202,7 +202,7 @@ void CBLight11::SetDrawData(ID3D11DeviceContext* _dc)
 
 void CBLight11::SetTexture(ID3D11DeviceContext* _dc)
 {
-	CBBase11::SetShaderTexture(_dc, GetImportLightPowMap(), lightPow, LIGHT_TEXTURE_REGISTERNO);
+	CBBase11::SetShaderTexture(_dc, GetImportLightPowMap(), lightPow, CH_L_LIGHT_TEXTURE_REGISTERNO);
 }
 
 void CBLight11::Update(ID3D11DeviceContext* _dc)
