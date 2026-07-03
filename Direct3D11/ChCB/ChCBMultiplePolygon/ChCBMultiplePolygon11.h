@@ -136,8 +136,8 @@ namespace ChD3D11
 			ConstantBuffer11<ChMaterialDatas> mateBuf;
 			bool maUpdateFlg = true;
 
-			std::vector<TextureBase11*> baseTex;
-			std::vector<TextureBase11*> normalTex;
+			TextureBase11* baseTex[CH_DMP_MAX_FRAME_COUNT];
+			TextureBase11* normalTex[CH_DMP_MAX_FRAME_COUNT];
 
 			TextureBase11* defaultBase = nullptr;
 			TextureBase11* defaultNormal = nullptr;

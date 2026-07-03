@@ -305,7 +305,15 @@ void CBMultiplePolygon11::SetShaderTexture(ID3D11DeviceContext* _dc)
 {
 	if (!*this)return;
 
-	CBBase11::SetShaderTextures(_dc, baseTex, *defaultBase, CH_BT_BASE_TEXTURE_REGISTER);
+	std::vector<TextureBase11*>baseTextures;
+
+	baseTextures.resize(CH_DMP_MAX_FRAME_COUNT);
+	for (size_t i = 0; i < CH_DMP_MAX_FRAME_COUNT; i++)
+	{
+		baseTextures[i] = baseTex[i];
+	}
+
+	CBBase11::SetShaderTextures(_dc, baseTextures, *defaultBase, CH_BT_BASE_TEXTURE_REGISTER);
 	//CBBase11::SetShaderTexture(_dc, normalTex, *defaultNormal, NORMAL_TEXTURE_REGISTER);
 }
 
