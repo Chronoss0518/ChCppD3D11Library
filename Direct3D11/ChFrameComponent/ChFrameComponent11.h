@@ -1,6 +1,8 @@
 #ifndef	Ch_D3D11_FrameCom_h
 #define	Ch_D3D11_FrameCom_h
 
+#include"../ChCB/ChCBBone/ChCBBone11.h"
+
 namespace ChD3D11
 {
 
