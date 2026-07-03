@@ -132,7 +132,7 @@ void CBBasicShapesPosition11::SetShaderBasicShapesPositionData(ID3D11DeviceConte
 
 void CBBasicShapesPosition11::AddPosition(const ChVec2& _position)
 {
-	if (positionData.positions.usePositionCount >= MAX_POSITION_DATA)return;
+	if (positionData.positions.usePositionCount >= CH_BS_MAX_POSITION_DATA)return;
 	positionData.positions.positions[positionData.positions.usePositionCount] = _position;
 	positionData.positions.usePositionCount++;
 	updateFlg = true;
@@ -222,7 +222,7 @@ void CBBasicShapesCircle11::SetShaderBasicShapesCircleData(ID3D11DeviceContext* 
 
 void CBBasicShapesCircle11::AddCircleData(const ChVec2& _centerPos, float _size)
 {
-	if (circleData.circleDatas.usePositionCount >= MAX_CIRCLE_DATA)return;
+	if (circleData.circleDatas.usePositionCount >= CH_BS_MAX_CIRCLE_DATA)return;
 	circleData.circleDatas.datas[circleData.circleDatas.usePositionCount].centerPosition = _centerPos;
 	circleData.circleDatas.datas[circleData.circleDatas.usePositionCount].size = _size;
 	circleData.circleDatas.usePositionCount++;
