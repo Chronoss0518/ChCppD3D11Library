@@ -35,7 +35,9 @@ namespace ChD3D11
 
 			virtual void SetShaderDrawData(ID3D11DeviceContext* _dc);
 
-			virtual void SetShaderCharaData(ID3D11DeviceContext* _dc);
+			virtual void SetShaderModelData(ID3D11DeviceContext* _dc);
+
+			virtual void SetShaderFrameData(ID3D11DeviceContext* _dc);
 
 		public://Get Functions//
 

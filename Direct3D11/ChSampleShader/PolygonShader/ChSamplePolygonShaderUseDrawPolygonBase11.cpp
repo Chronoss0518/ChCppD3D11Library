@@ -33,16 +33,21 @@ void SamplePolygonShaderUseDrawPolygonBase11::Release()
 
 void SamplePolygonShaderUseDrawPolygonBase11::SetProjectionMatrix(const ChLMat& _mat)
 {
+	if (!IsInit())return;
+	if (IsDraw())return;
 	polyData.SetProjectionMatrix(_mat);
 }
 
 void SamplePolygonShaderUseDrawPolygonBase11::SetViewMatrix(const ChLMat& _mat)
 {
+	if (!IsInit())return;
+	if (IsDraw())return;
 	polyData.SetViewMatrix(_mat);
 }
 
 void SamplePolygonShaderUseDrawPolygonBase11::SetMoveUV(const ChVec2& _move)
 {
+	if (!IsInit())return;
 	polyData.SetMoveUV(_move);
 }
 
@@ -53,11 +58,18 @@ void SamplePolygonShaderUseDrawPolygonBase11::SetShaderDrawData(ID3D11DeviceCont
 	polyData.SetPSDrawData(_dc);
 }
 
-void SamplePolygonShaderUseDrawPolygonBase11::SetShaderCharaData(ID3D11DeviceContext* _dc)
+void SamplePolygonShaderUseDrawPolygonBase11::SetShaderModelData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
-	polyData.SetVSCharaData(_dc);
-	polyData.SetPSCharaData(_dc);
+	polyData.SetVSModelData(_dc);
+	polyData.SetPSModelData(_dc);
+}
+
+void SamplePolygonShaderUseDrawPolygonBase11::SetShaderFrameData(ID3D11DeviceContext* _dc)
+{
+	if (!IsInit())return;
+	polyData.SetVSFrameData(_dc);
+	polyData.SetPSFrameData(_dc);
 }
 
 void SamplePolygonShaderUseDrawPolygonBase11::DrawStart(ID3D11DeviceContext* _dc)
