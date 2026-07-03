@@ -13,13 +13,13 @@
 #include"ChBasicDrawMultipleMesh11.h"
 
 template<typename CharaType>
-ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::~BaseDrawMultipleMesh11()
+ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::~BasicDrawMultipleMesh11()
 {
 	Release();
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Init(ID3D11Device* _device)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::Init(ID3D11Device* _device)
 {
 	if (IsInit())return;
 
@@ -32,14 +32,14 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Init(ID3D11Device* _dev
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Release()
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::Release()
 {
 	SamplePolygonShaderBase11::Release();
 	multiplePolygon.Release();
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::InitVertexShader()
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::InitVertexShader()
 {
 
 #include"../PolygonShader/BasicMultipleDrawMeshVertex.inc"
@@ -55,7 +55,15 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::InitVertexShader()
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::InitPixelShader()
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::InitGeometryShader()
+{
+#include"../PolygonShader/BasicMultipleDrawMeshGeometry.inc"
+
+	SamplePolygonShaderBase11::CreateGeometryShader(main, sizeof(main));
+}
+
+template<typename CharaType>
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::InitPixelShader()
 {
 #include"../PolygonShader/BasicMultipleDrawMeshPixel.inc"
 
@@ -63,31 +71,160 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::InitPixelShader()
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::CreateFrameMesh(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model)
 {
-	FrameComponent11<CharaType>::CreateFrameMesh(GetDevice(), _model);
+	if (_model->GetComponent<MeshComponent>() != nullptr)return;
+
+	unsigned long maxFrameNo = 0;
+
+	std::vector<UseVertexs> vertexs;
+	std::vector<unsigned long> indexs;
+
+	CreateFrameMesh(_model, vertexs, indexs, maxFrameNo);
+
+	if (vertexs.size() <= 0)return;
+	if (indexs.size() <= 0)return;
+
+	auto&& meshCom = _model->SetComponent<MeshComponent>();
+
+	meshCom->indexNum = indexs.size();
+	meshCom->indexBuffer.CreateBuffer(
+		GetDevice(),
+		&indexs[0],
+		meshCom->indexNum);
+
+	meshCom->vertexBuffer.CreateBuffer(
+		GetDevice(),
+		&vertexs[0],
+		static_cast<unsigned long>(vertexs.size()));
+
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetProjectionMatrix(const ChLMat& _mat)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(
+	ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
+	std::vector<UseVertexs>& _vertexs,
+	std::vector<unsigned long>& _indexs,
+	unsigned long _maxFrameNo)
+{
+
+	CreateFrameData(_model, _vertexs, _indexs, _maxFrameNo);
+
+	for (auto&& child : _model->GetChildlen<ChCpp::FrameObject<CharaType>>())
+	{
+		if (child.expired())continue;
+
+		CreateFrameMesh(child.lock(), _vertexs, _indexs, _maxFrameNo);
+	}
+
+}
+
+template<typename CharaType>
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
+	ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
+	std::vector<UseVertexs>& _vertexs,
+	std::vector<unsigned long>& _indexs,
+	unsigned long _maxFrameNo)
+{
+	auto&& frameCom = _model->GetComponent<ChCpp::FrameComponent<CharaType>>();
+	if (frameCom == nullptr)return;
+
+	auto&& createFrameCom = _model->GetComponent<FrameComponent>();
+	if (createFrameCom != nullptr)return;
+
+	if (frameCom->primitives.size() <= 0)return;
+	if (frameCom->vertexList.size() <= 0)return;
+
+	createFrameCom = _model->SetComponent<FrameComponent>();
+
+	auto&& primitives = frameCom->primitives;
+	auto&& vertexs = frameCom->vertexList;
+	auto&& materials = frameCom->materialList;
+
+	for (size_t i = 0; i < materials.size(); i++)
+	{
+		auto prim = ChPtr::Make_S<FrameComponent::PrimitiveData>();
+		prim->mate = materials[i];
+
+		for (unsigned char i = 0; i < ChStd::EnumCast(Ch3D::TextureType::None); i++)
+		{
+			Ch3D::TextureType type = static_cast<Ch3D::TextureType>(i);
+
+			auto&& texPath = prim->mate->textures.find(type);
+			if (texPath == prim->mate->textures.end())continue;
+			if ((*texPath).second.empty())continue;
+
+			auto texture = ChPtr::Make_S<Texture11>();
+			texture->CreateTexture((*texPath).second, GetDevice());
+
+			if (!texture->IsTex())texture = nullptr;
+			prim->textures[type] = texture;
+		}
+
+
+		prim->frameNo = _maxFrameNo;
+		_maxFrameNo++;
+
+		createFrameCom->primitives.push_back(prim);
+	}
+
+
+	unsigned long maxVertexCount = 0;
+	unsigned long indexCount = 0;
+
+	for (size_t i = 0; i < primitives.size(); i++)
+	{
+		maxVertexCount = _vertexs.size();
+
+		indexCount = 0;
+
+		auto&& material = createFrameCom->primitives[primitives[i]->mateNo];
+
+		for (size_t j = 0; j < primitives[i]->vertexData.size(); j++)
+		{
+			unsigned long vertexNo = primitives[i]->vertexData[j]->vertexNo;
+			auto&& baseVertex = vertexs[vertexNo];
+			UseVertexs vertex;
+			vertex.pos =  baseVertex->pos;
+			vertex.color =  baseVertex->color;
+			vertex.normal =  baseVertex->normal;
+			vertex.uv = primitives[i]->vertexData[j]->uv;
+			vertex.faceNormal = primitives[i]->faceNormal;
+			vertex.frameNo = material->frameNo;
+			_vertexs.push_back(vertex);
+
+			indexCount++;
+		}
+
+		for (unsigned long j = 1; j < indexCount - 1; j++)
+		{
+			_indexs.push_back(static_cast<unsigned long>(maxVertexCount));
+			_indexs.push_back(static_cast<unsigned long>(maxVertexCount + j));
+			_indexs.push_back(static_cast<unsigned long>(maxVertexCount + j + 1));
+		}
+	}
+}
+
+template<typename CharaType>
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::SetProjectionMatrix(const ChLMat& _mat)
 {
 	multiplePolygon.SetProjectionMatrix(_mat);
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetViewMatrix(const ChLMat& _mat)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::SetViewMatrix(const ChLMat& _mat)
 {
 	multiplePolygon.SetViewMatrix(_mat);
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetMoveUV(const ChVec2& _move, unsigned int _num)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::SetMoveUV(const ChVec2& _move, unsigned int _num)
 {
 	multiplePolygon.SetMoveUV(_move, _num);
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderDrawData(ID3D11DeviceContext* _dc)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::SetShaderDrawData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
 	multiplePolygon.SetVSDrawData(_dc);
@@ -95,7 +232,7 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderDrawData(ID3D1
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderModelData(ID3D11DeviceContext* _dc)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::SetShaderModelData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
 	multiplePolygon.SetVSModelData(_dc);
@@ -103,15 +240,16 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderModelData(ID3D
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderFrameData(ID3D11DeviceContext* _dc)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::SetShaderFrameData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
 	multiplePolygon.SetVSFrameData(_dc);
+	multiplePolygon.SetGSFrameData(_dc);
 	multiplePolygon.SetPSFrameData(_dc);
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawStart(ID3D11DeviceContext* _dc)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::DrawStart(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
 	if (IsDraw())return;
@@ -123,7 +261,7 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawStart(ID3D11DeviceC
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Draw(
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::Draw(
 	ChCpp::FrameObject<CharaType>& _mesh,
 	const ChLMat& _mat)
 {
@@ -131,15 +269,33 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Draw(
 	if (!IsDraw())return;
 	if (ChPtr::NullCheck(GetDC()))return;
 
-	//multiplePolygon.SetWorldMatrix(_mat);
+	auto&& meshCom = _mesh.GetComponent<MeshComponent>();
+	if (meshCom == nullptr)return;
+
+	for (unsigned long i = 0; i < CH_DMP_MAX_FRAME_COUNT; i++)
+	{
+		multiplePolygon.SetDrwaFlags(false, i);
+	}
+
+	meshCom->vertexBuffer.SetVertexBuffer(GetDC(), 0);
+	meshCom->indexBuffer.SetIndexBuffer(GetDC());
+
+	multiplePolygon.SetWorldMatrix(_mat);
 
 	_mesh.UpdateDrawTransform();
 	DrawUpdate(_mesh);
 
+	multiplePolygon.SetShaderModelData(GetDC());
+	multiplePolygon.SetShaderMaterialData(GetDC());
+	multiplePolygon.SetShaderFrameData(GetDC());
+	multiplePolygon.SetShaderTexture(GetDC());
+
+	GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(meshCom->indexNum), 1, 0, 0, 0);
+
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawUpdate(ChCpp::FrameObject<CharaType>& _object)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::DrawUpdate(ChCpp::FrameObject<CharaType>& _object)
 {
 #if DEBUG
 	unsigned long start, end;
@@ -174,24 +330,19 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawUpdate(ChCpp::Frame
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
 {
 
-#if false
 	_object.UpdateDrawTransform();
 	auto&& frameCom = _object.GetComponent<FrameComponent>();
 
 	if (frameCom == nullptr)return;
 
-	auto&& primitives = frameCom->GetPrimitives();
+	auto&& primitives = frameCom->primitives;
 
 	if (primitives.empty())return;
 
 	ChLMat drawMatrix = _object.GetDrawLHandMatrix();
-
-	auto&& frame = frameCom->GetFrameCom();
-
-	unsigned int offsets = 0;
 
 	for (auto&& prim : primitives)
 	{
@@ -199,50 +350,31 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameOb
 
 		auto&& mate11 = *prim->mate;
 
+		multiplePolygon.SetMateDiffuse(mate11.mate.diffuse, prim->frameNo);
+		multiplePolygon.SetMateSpecularColor(mate11.mate.specularColor, prim->frameNo);
+		multiplePolygon.SetMateSpecularPower(mate11.mate.specularPower, prim->frameNo);
+		multiplePolygon.SetMateAmbientColor(mate11.mate.ambient, prim->frameNo);
 
-		polyData.SetMateDiffuse(mate11.mate.diffuse);
-		polyData.SetMateSpecularColor(mate11.mate.specularColor);
-		polyData.SetMateSpecularPower(mate11.mate.specularPower);
-		polyData.SetMateAmbientColor(mate11.mate.ambient);
+		multiplePolygon.SetFrameMatrix(drawMatrix, prim->frameNo);
+		multiplePolygon.SetDrwaFlags(prim->drawFlg, prim->frameNo);
 
-		polyData.SetShaderMaterialData(GetDC());
-
-		prim->vertexBuffer.SetVertexBuffer(GetDC(), offsets);
-		prim->indexBuffer.SetIndexBuffer(GetDC());
-
-		polyData.SetFrameMatrix(drawMatrix);
-
-		polyData.SetVSCharaData(GetDC());
-
-		frameCom->SetBoneData(boneData);
-
-		boneData.SetVSDrawData(GetDC());
-
-		polyData.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get());
-		polyData.SetNormalTexture(prim->textures[Ch3D::TextureType::Normal].get());
-
-		polyData.SetShaderTexture(GetDC());
-
-		GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()), 1, 0, 0, 0);
-
-
+		multiplePolygon.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get(), prim->frameNo);
 	}
-#endif
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawEnd()
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::DrawEnd()
 {
 	SamplePolygonShaderBase11::SetShaderDefaultBlender(GetDC());
 	SamplePolygonShaderBase11::DrawEnd();
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Update(ID3D11DeviceContext* _dc)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::Update(ID3D11DeviceContext* _dc)
 {
 	if (!updateFlg)return;
 	SamplePolygonShaderBase11::Update(_dc);
 	updateFlg = false;
 }
 
-CH_STRING_TYPE_USE_FILE_EXPLICIT_DECLARATION(ChD3D11::Shader::BaseDrawMultipleMesh11);
+CH_STRING_TYPE_USE_FILE_EXPLICIT_DECLARATION(ChD3D11::Shader::BasicDrawMultipleMesh11);
