@@ -52,7 +52,7 @@ void ChD3D11::Shader::BaseDrawMesh11<CharaType>::InitVertexShader()
 
 	std::array<D3D11_INPUT_ELEMENT_DESC, 10>decl;
 
-	FrameComponent11<CharaType>::CreateInputElements<10>(decl);
+	FrameComponent11<CharaType>::CreateInputElements(decl);
 
 	SamplePolygonShaderBase11::CreateVertexShader(&decl[0], decl.size(), main, sizeof(main));
 }
