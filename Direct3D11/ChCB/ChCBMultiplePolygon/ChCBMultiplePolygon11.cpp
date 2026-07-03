@@ -269,7 +269,7 @@ void CBMultiplePolygon11::SetShaderTexture(ID3D11DeviceContext* _dc)
 {
 	if (!*this)return;
 
-	CBBase11::SetShaderTextures(_dc, baseTex, *defaultBase, BASE_TEXTURE_REGISTER);
+	CBBase11::SetShaderTextures(_dc, baseTex, *defaultBase, CH_BT_BASE_TEXTURE_REGISTER);
 	//CBBase11::SetShaderTexture(_dc, normalTex, *defaultNormal, NORMAL_TEXTURE_REGISTER);
 }
 
