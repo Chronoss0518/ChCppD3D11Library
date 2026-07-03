@@ -25,7 +25,7 @@ struct OutColor
 };
 
 
-float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterial _mate);
+float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterialData _mate);
 
 //ピクセルシェダ(PixelShader)//
 //通常描画//
@@ -73,11 +73,11 @@ OutColor main(VS_OUT _in)
 
 	float4 baseTexCol = GetBaseTextureColor(_in.uv);
 	
-    outColor.highLight = outColor.color = mate.dif * baseTexCol * outColor.color;
+    outColor.highLight = outColor.color = mateData.dif * baseTexCol * outColor.color;
 	
     AlphaTest(outColor.color.a);
 	
-	outColor.color.rgb = GetLightColor(outColor.color, _in, mate);
+    outColor.color.rgb = GetLightColor(outColor.color, _in, mateData);
 	
     outColor.highLight.r = max(max(outColor.highLight.r, outColor.color.r) - 1.0f, 0.0f);
     outColor.highLight.g = max(max(outColor.highLight.g, outColor.color.g) - 1.0f, 0.0f);
@@ -92,7 +92,7 @@ OutColor main(VS_OUT _in)
 }
 
 
-float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterial _mate)
+float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterialData _mate)
 {
 
 	L_BaseColor lightCol;

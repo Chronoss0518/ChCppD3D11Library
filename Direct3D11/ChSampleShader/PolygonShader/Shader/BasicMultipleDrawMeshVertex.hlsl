@@ -23,7 +23,7 @@ VS_OUT main
 {
     VS_OUT res;
 	
-    MTWStruct tmp = ModelToWorld(_pos, _uv, _normal, _faceNormal, charaDatas.datas[_frameNo].frameMatrix, _frameNo);
+    MTWStruct tmp = ModelToWorld(_pos, _uv, _normal, _faceNormal, frameDatas.datas[_frameNo].frameMatrix, _frameNo);
 
     res.worldPos = tmp.worldPos;
     res.viewPos = tmp.viewPos;
