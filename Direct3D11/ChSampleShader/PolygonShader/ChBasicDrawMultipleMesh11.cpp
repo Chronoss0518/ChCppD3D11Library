@@ -8,10 +8,6 @@
 
 #include"../../ChTexture/ChTexture11.h"
 
-#include"../../ChCB/ChCBLight/ChCBLight11.h"
-#include"../../ChCB/ChCBPolygon/ChCBPolygon11.h"
-#include"../../ChCB/ChCBBone/ChCBBone11.h"
-
 #include"../../ChFrameComponent/ChFrameComponent11.h"
 
 #include"ChBasicDrawMultipleMesh11.h"
@@ -32,16 +28,14 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Init(ID3D11Device* _dev
 
 	SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	polyData.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
-	boneData.Init(_device);
+	multiplePolygon.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
 }
 
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Release()
 {
 	SamplePolygonShaderBase11::Release();
-	polyData.Release();
-	boneData.Release();
+	multiplePolygon.Release();
 }
 
 template<typename CharaType>
@@ -101,11 +95,19 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderDrawData(ID3D1
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderCharaData(ID3D11DeviceContext* _dc)
+void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderModelData(ID3D11DeviceContext* _dc)
 {
 	if (!IsInit())return;
-	multiplePolygon.SetVSCharaData(_dc);
-	multiplePolygon.SetPSCharaData(_dc);
+	multiplePolygon.SetVSModelData(_dc);
+	multiplePolygon.SetPSModelData(_dc);
+}
+
+template<typename CharaType>
+void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::SetShaderFrameData(ID3D11DeviceContext* _dc)
+{
+	if (!IsInit())return;
+	multiplePolygon.SetVSFrameData(_dc);
+	multiplePolygon.SetPSFrameData(_dc);
 }
 
 template<typename CharaType>
@@ -129,11 +131,10 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::Draw(
 	if (!IsDraw())return;
 	if (ChPtr::NullCheck(GetDC()))return;
 
-	polyData.SetWorldMatrix(_mat);
+	//multiplePolygon.SetWorldMatrix(_mat);
 
-	ChCpp::FrameObject<CharaType>& frame = _mesh;
-	frame.UpdateFunction();
-	DrawUpdate(frame);
+	_mesh.UpdateDrawTransform();
+	DrawUpdate(_mesh);
 
 }
 
@@ -175,6 +176,8 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawUpdate(ChCpp::Frame
 template<typename CharaType>
 void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
 {
+
+#if false
 	_object.UpdateDrawTransform();
 	auto&& frameCom = _object.GetComponent<FrameComponent>();
 
@@ -196,7 +199,6 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameOb
 
 		auto&& mate11 = *prim->mate;
 
-#if false
 
 		polyData.SetMateDiffuse(mate11.mate.diffuse);
 		polyData.SetMateSpecularColor(mate11.mate.specularColor);
@@ -223,9 +225,9 @@ void ChD3D11::Shader::BaseDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameOb
 
 		GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(prim->indexArray.size()), 1, 0, 0, 0);
 
-#endif
 
 	}
+#endif
 }
 
 template<typename CharaType>
