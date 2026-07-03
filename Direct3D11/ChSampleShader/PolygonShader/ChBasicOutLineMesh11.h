@@ -6,7 +6,6 @@
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
 #include"../../ChTexture/ChTexture11.h"
-#include"../../ChMesh/ChMesh11.h"
 
 #include"../../ChCB/ChCBBone/ChCBBone11.h"
 #include"../../ChCB/ChCBOutLine/ChCBOutLine11.h"
@@ -56,7 +55,7 @@ namespace ChD3D11
 			void DrawStart(ID3D11DeviceContext* _dc)override;
 
 			void Draw(
-				Mesh11<CharaType>& _mesh,
+				ChCpp::FrameObject<CharaType>& _mesh,
 				const ChLMat& _mat = ChLMat());
 
 			void DrawEnd()override;
