@@ -177,6 +177,14 @@ void CBMultiplePolygon11::SetPSDrawData(ID3D11DeviceContext* _dc)
 	drawBuf.SetToPixelShader(_dc);
 }
 
+void CBMultiplePolygon11::SetGSDrawData(ID3D11DeviceContext* _dc)
+{
+	if (!*this)return;
+
+	UpdateDD(_dc);
+	drawBuf.SetToGeometryShader(_dc);
+}
+
 void CBMultiplePolygon11::SetVSDrawData(ID3D11DeviceContext* _dc)
 {
 	if (!*this)return;
@@ -190,6 +198,7 @@ void CBMultiplePolygon11::SetShaderDrawData(ID3D11DeviceContext* _dc)
 	if (!*this)return;
 
 	SetVSDrawData(_dc);
+	SetGSDrawData(_dc);
 	SetPSDrawData(_dc);
 }
 
@@ -199,6 +208,14 @@ void CBMultiplePolygon11::SetPSModelData(ID3D11DeviceContext* _dc)
 
 	UpdateMoD(_dc);
 	modelBuf.SetToPixelShader(_dc);
+}
+
+void CBMultiplePolygon11::SetGSModelData(ID3D11DeviceContext* _dc)
+{
+	if (!*this)return;
+
+	UpdateMoD(_dc);
+	modelBuf.SetToGeometryShader(_dc);
 }
 
 void CBMultiplePolygon11::SetVSModelData(ID3D11DeviceContext* _dc)
@@ -214,6 +231,7 @@ void CBMultiplePolygon11::SetShaderModelData(ID3D11DeviceContext* _dc)
 	if (!*this)return;
 
 	SetVSModelData(_dc);
+	SetGSModelData(_dc);
 	SetPSModelData(_dc);
 }
 
@@ -223,6 +241,14 @@ void CBMultiplePolygon11::SetPSFrameData(ID3D11DeviceContext* _dc)
 
 	UpdateFD(_dc);
 	frameBuf.SetToPixelShader(_dc);
+}
+
+void CBMultiplePolygon11::SetGSFrameData(ID3D11DeviceContext* _dc)
+{
+	if (!*this)return;
+
+	UpdateFD(_dc);
+	frameBuf.SetToGeometryShader(_dc);
 }
 
 void CBMultiplePolygon11::SetVSFrameData(ID3D11DeviceContext* _dc)
@@ -238,6 +264,7 @@ void CBMultiplePolygon11::SetShaderFrameData(ID3D11DeviceContext* _dc)
 	if (!*this)return;
 
 	SetVSFrameData(_dc);
+	SetGSFrameData(_dc);
 	SetPSFrameData(_dc);
 }
 
@@ -247,6 +274,14 @@ void CBMultiplePolygon11::SetPSMaterialData(ID3D11DeviceContext* _dc)
 
 	UpdateMaD(_dc);
 	mateBuf.SetToPixelShader(_dc);
+}
+
+void CBMultiplePolygon11::SetGSMaterialData(ID3D11DeviceContext* _dc)
+{
+	if (!*this)return;
+
+	UpdateMaD(_dc);
+	mateBuf.SetToGeometryShader(_dc);
 }
 
 void CBMultiplePolygon11::SetVSMaterialData(ID3D11DeviceContext* _dc)
@@ -262,6 +297,7 @@ void CBMultiplePolygon11::SetShaderMaterialData(ID3D11DeviceContext* _dc)
 	if (!*this)return;
 
 	SetVSMaterialData(_dc);
+	SetGSMaterialData(_dc);
 	SetPSMaterialData(_dc);
 }
 

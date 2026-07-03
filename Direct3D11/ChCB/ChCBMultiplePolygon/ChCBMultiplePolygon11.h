@@ -63,11 +63,15 @@ namespace ChD3D11
 
 			void SetPSDrawData(ID3D11DeviceContext* _dc);
 
+			void SetGSDrawData(ID3D11DeviceContext* _dc);
+
 			void SetVSDrawData(ID3D11DeviceContext* _dc);
 
 			void SetShaderDrawData(ID3D11DeviceContext* _dc);
 
 			void SetPSModelData(ID3D11DeviceContext* _dc);
+
+			void SetGSModelData(ID3D11DeviceContext* _dc);
 
 			void SetVSModelData(ID3D11DeviceContext* _dc);
 
@@ -75,11 +79,15 @@ namespace ChD3D11
 
 			void SetPSFrameData(ID3D11DeviceContext* _dc);
 
+			void SetGSFrameData(ID3D11DeviceContext* _dc);
+
 			void SetVSFrameData(ID3D11DeviceContext* _dc);
 
 			void SetShaderFrameData(ID3D11DeviceContext* _dc);
 
 			void SetPSMaterialData(ID3D11DeviceContext* _dc);
+
+			void SetGSMaterialData(ID3D11DeviceContext* _dc);
 
 			void SetVSMaterialData(ID3D11DeviceContext* _dc);
 
