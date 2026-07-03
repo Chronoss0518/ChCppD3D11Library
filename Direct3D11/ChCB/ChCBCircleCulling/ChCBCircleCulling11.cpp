@@ -12,7 +12,7 @@ void CBCircleCulling11::Init(ID3D11Device* _device)
 {
 	Release();
 	CBBase11::Init(_device);
-	buf.CreateBuffer(_device, CIRCLE_CULLING_DATA);
+	buf.CreateBuffer(_device, CH_CC_CIRCLE_CULLING_DATA_REGISTERNO);
 	SetInitFlg(true);
 }
 
