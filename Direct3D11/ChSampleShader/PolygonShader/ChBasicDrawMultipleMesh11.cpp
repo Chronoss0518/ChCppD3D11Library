@@ -59,7 +59,7 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::InitGeometryShader()
 {
 #include"../PolygonShader/BasicMultipleDrawMeshGeometry.inc"
 
-	SamplePolygonShaderBase11::CreateGeometryShader(main, sizeof(main));
+	//SamplePolygonShaderBase11::CreateGeometryShader(main, sizeof(main));
 }
 
 template<typename CharaType>
@@ -105,7 +105,7 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(
 	ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 	std::vector<UseVertexs>& _vertexs,
 	std::vector<unsigned long>& _indexs,
-	unsigned long _maxFrameNo)
+	unsigned long& _maxFrameNo)
 {
 
 	CreateFrameData(_model, _vertexs, _indexs, _maxFrameNo);
@@ -124,7 +124,7 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
 	ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 	std::vector<UseVertexs>& _vertexs,
 	std::vector<unsigned long>& _indexs,
-	unsigned long _maxFrameNo)
+	unsigned long& _maxFrameNo)
 {
 	auto&& frameCom = _model->GetComponent<ChCpp::FrameComponent<CharaType>>();
 	if (frameCom == nullptr)return;
@@ -136,6 +136,8 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
 	if (frameCom->vertexList.size() <= 0)return;
 
 	createFrameCom = _model->SetComponent<FrameComponent>();
+
+	createFrameCom->frameCom = frameCom;
 
 	auto&& primitives = frameCom->primitives;
 	auto&& vertexs = frameCom->vertexList;
@@ -168,39 +170,34 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
 		createFrameCom->primitives.push_back(prim);
 	}
 
-
 	unsigned long maxVertexCount = 0;
-	unsigned long indexCount = 0;
 
-	for (size_t i = 0; i < primitives.size(); i++)
+	for (auto&& primitive : primitives)
 	{
-		maxVertexCount = _vertexs.size();
+ 		maxVertexCount = _vertexs.size();
 
-		indexCount = 0;
+		auto&& material = createFrameCom->primitives[primitive->mateNo];
 
-		auto&& material = createFrameCom->primitives[primitives[i]->mateNo];
-
-		for (size_t j = 0; j < primitives[i]->vertexData.size(); j++)
+		for (size_t i = 0; i < primitive->vertexData.size(); i++)
 		{
-			unsigned long vertexNo = primitives[i]->vertexData[j]->vertexNo;
+			unsigned long vertexNo = primitive->vertexData[i]->vertexNo;
 			auto&& baseVertex = vertexs[vertexNo];
 			UseVertexs vertex;
 			vertex.pos =  baseVertex->pos;
 			vertex.color =  baseVertex->color;
 			vertex.normal =  baseVertex->normal;
-			vertex.uv = primitives[i]->vertexData[j]->uv;
-			vertex.faceNormal = primitives[i]->faceNormal;
+			vertex.uv = primitive->vertexData[i]->uv;
+			vertex.faceNormal = primitive->faceNormal;
 			vertex.frameNo = material->frameNo;
-			_vertexs.push_back(vertex);
 
-			indexCount++;
+			_vertexs.push_back(vertex);
 		}
 
-		for (unsigned long j = 1; j < indexCount - 1; j++)
+		for (size_t i = 1; i < primitive->vertexData.size() - 1; i++)
 		{
 			_indexs.push_back(static_cast<unsigned long>(maxVertexCount));
-			_indexs.push_back(static_cast<unsigned long>(maxVertexCount + j));
-			_indexs.push_back(static_cast<unsigned long>(maxVertexCount + j + 1));
+			_indexs.push_back(static_cast<unsigned long>(maxVertexCount + i));
+			_indexs.push_back(static_cast<unsigned long>(maxVertexCount + i + 1));
 		}
 	}
 }

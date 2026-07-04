@@ -6,6 +6,7 @@
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
 #include"../../ChTexture/ChTexture11.h"
+#include"../../ChCB/ChCBBone/ChCBBone11.h"
 
 #include"../../ChCB/ChCBMultiplePolygon/ChCBMultiplePolygon11.h"
 
@@ -19,7 +20,7 @@ namespace ChD3D11
 		{
 		public:
 
-			struct UseVertexs : public Ch3D::MeshVertex
+			struct UseVertexs : public Ch3D::SkinMeshVertex<CH_BB_BONE_MAX_NUM>
 			{
 				int frameNo = 0;
 			};
@@ -82,13 +83,13 @@ namespace ChD3D11
 				ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 				std::vector<UseVertexs>& _vertexs,
 				std::vector<unsigned long>& _indexs,
-				unsigned long _maxFrameNo);
+				unsigned long& _maxFrameNo);
 
 			void CreateFrameData(
 				ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 				std::vector<UseVertexs>& _vertexs,
 				std::vector<unsigned long>& _indexs,
-				unsigned long _maxFrameNo);
+				unsigned long& _maxFrameNo);
 
 		public://Set Functions//
 
