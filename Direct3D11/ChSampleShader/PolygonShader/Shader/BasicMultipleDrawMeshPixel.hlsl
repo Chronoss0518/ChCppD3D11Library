@@ -71,7 +71,9 @@ OutColor main(VS_OUT _in)
 
     outColor.color = _in.color;
 
-    float4 baseTexCol = GetBaseTextureColorFromNo(_in.uv,_in.frameNo);
+    _in.uv = GetUV(_in.uv, _in.frameNo);
+	
+    float4 baseTexCol = GetBaseTextureColor(_in.uv);
 	
     outColor.highLight = outColor.color = mateDatas.datas[_in.frameNo].dif * baseTexCol * outColor.color;
 	
