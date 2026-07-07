@@ -34,7 +34,8 @@
 #include"Direct3D11/ChCB/ChCBOutLine/ChCBOutLine11.h"
 //サンプルシェーダー//
 #include"Direct3D11/ChSampleShader/PolygonShader/ChBaseDrawMesh11.h"
-#include"Direct3D11/ChSampleShader/PolygonShader/ChBasicOutLineMesh11.h"
+//#include"Direct3D11/ChSampleShader/PolygonShader/ChBasicOutLineMesh11.h"//未完成//
+//#include"Direct3D11/ChSampleShader/PolygonShader/ChBasicDrawMultipleMesh11.h"//未完成//
 #include"Direct3D11/ChSampleShader/PolygonShader/ChBaseDrawPolygonBoard11.h"
 #include"Direct3D11/ChSampleShader/SpriteShader/ChBaseDrawSprite11.h"
 #include"Direct3D11/ChSampleShader/SpriteShader/ChCircleCullingSpriteShader11.h"
