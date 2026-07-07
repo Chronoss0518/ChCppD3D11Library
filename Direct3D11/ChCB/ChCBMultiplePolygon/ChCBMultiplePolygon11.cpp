@@ -136,10 +136,9 @@ void CBMultiplePolygon11::SetBaseTexture(TextureBase11* _tex, unsigned long _num
 	baseTex[_num] = _tex;
 }
 
-void CBMultiplePolygon11::SetNormalTexture(TextureBase11* _tex, unsigned long _num)
+void CBMultiplePolygon11::SetNormalTexture(TextureBase11* _tex)
 {
-	if (_num < 0 || _num >= CH_DMP_MAX_FRAME_COUNT)return;
-	normalTex[_num] = _tex;
+	normalTex = _tex;
 }
 
 void CBMultiplePolygon11::SetDrawData(const ChDrawData& _data)
@@ -305,15 +304,15 @@ void CBMultiplePolygon11::SetShaderTexture(ID3D11DeviceContext* _dc)
 {
 	if (!*this)return;
 
-	std::vector<TextureBase11*>baseTextures;
+	std::vector<TextureBase11*>texutres;
+	texutres.resize(CH_DMP_MAX_FRAME_COUNT);
 
-	baseTextures.resize(CH_DMP_MAX_FRAME_COUNT);
-	for (size_t i = 0; i < CH_DMP_MAX_FRAME_COUNT; i++)
+	for (unsigned short i = 0; i < CH_DMP_MAX_FRAME_COUNT; i++)
 	{
-		baseTextures[i] = baseTex[i];
+		texutres[i] = baseTex[i];
 	}
 
-	CBBase11::SetShaderTextures(_dc, baseTextures, *defaultBase, CH_BT_BASE_TEXTURE_REGISTER);
+	CBBase11::SetShaderTextures(_dc, texutres, *defaultBase, CH_BT_BASE_TEXTURE_REGISTER);
 	//CBBase11::SetShaderTexture(_dc, normalTex, *defaultNormal, NORMAL_TEXTURE_REGISTER);
 }
 

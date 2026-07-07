@@ -51,7 +51,7 @@ namespace ChD3D11
 
 			void SetBaseTexture(TextureBase11* _tex, unsigned long _num);
 
-			void SetNormalTexture(TextureBase11* _tex, unsigned long _num);
+			void SetNormalTexture(TextureBase11* _tex);
 
 			void SetDrawData(const ChDrawData& _data);
 
@@ -137,7 +137,7 @@ namespace ChD3D11
 			bool maUpdateFlg = true;
 
 			TextureBase11* baseTex[CH_DMP_MAX_FRAME_COUNT];
-			TextureBase11* normalTex[CH_DMP_MAX_FRAME_COUNT];
+			TextureBase11* normalTex = nullptr;
 
 			TextureBase11* defaultBase = nullptr;
 			TextureBase11* defaultNormal = nullptr;
