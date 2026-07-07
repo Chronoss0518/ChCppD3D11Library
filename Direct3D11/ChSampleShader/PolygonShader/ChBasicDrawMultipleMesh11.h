@@ -1,6 +1,8 @@
 #ifndef Ch_D3D11_SS_MultipleMesh_h
 #define Ch_D3D11_SS_MultipleMesh_h
 
+#include<array>
+
 #include"ChSamplePolygonShaderBase11.h"
 
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
@@ -13,8 +15,12 @@
 
 namespace ChD3D11
 {
+	class Sprite11;
+
 	namespace Shader
 	{
+		class BaseDrawSprite11;
+
 		template<typename CharaType>
 		class BasicDrawMultipleMesh11 final :public SamplePolygonShaderBase11
 		{
@@ -32,6 +38,8 @@ namespace ChD3D11
 				VertexBuffer11<UseVertexs> vertexBuffer;
 				IndexBuffer11 indexBuffer;
 
+				ChPtr::Shared<TextureBase11>useDeffiuseTexture = nullptr;
+
 				unsigned long indexNum = 0;
 			};
 
@@ -45,7 +53,7 @@ namespace ChD3D11
 					bool drawFlg = true;
 
 					ChPtr::Shared<Ch3D::MaterialData<CharaType>> mate;
-					std::map<Ch3D::TextureType, ChPtr::Shared<Texture11>>textures;
+					std::map<Ch3D::TextureType, ChPtr::Shared<TextureBase11>>textures;
 				};
 
 			public:
@@ -53,6 +61,11 @@ namespace ChD3D11
 				ChPtr::Shared<ChCpp::FrameComponent<CharaType>> frameCom;
 
 				std::vector<ChPtr::Shared<PrimitiveData>>primitives;
+			};
+
+			struct Textures
+			{
+				std::map<Ch3D::TextureType, TextureBase11*>texture;
 			};
 
 		public://Constructor Destructor//
@@ -75,7 +88,7 @@ namespace ChD3D11
 
 		public:
 
-			void CreateFrameMesh(ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model);
+			void CreateFrameMesh(ID3D11DeviceContext* _dc, ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model);
 
 		private:
 
@@ -83,13 +96,17 @@ namespace ChD3D11
 				ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 				std::vector<UseVertexs>& _vertexs,
 				std::vector<unsigned long>& _indexs,
-				unsigned long& _maxFrameNo);
+				unsigned long& _maxFrameNo,
+				std::array<Textures,CH_DMP_MAX_FRAME_COUNT>& _textures,
+				std::map<Ch3D::TextureType, ChMath::Vector2Base<unsigned int>>& _textureSize);
 
 			void CreateFrameData(
 				ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 				std::vector<UseVertexs>& _vertexs,
 				std::vector<unsigned long>& _indexs,
-				unsigned long& _maxFrameNo);
+				unsigned long& _maxFrameNo,
+				std::array<Textures, CH_DMP_MAX_FRAME_COUNT>& _textures,
+				std::map<Ch3D::TextureType, ChMath::Vector2Base<unsigned int>>& _textureSize);
 
 		public://Set Functions//
 
@@ -134,6 +151,9 @@ namespace ChD3D11
 		private://Member Value//
 			
 			CB::CBMultiplePolygon11 multiplePolygon;
+
+			ChPtr::Shared<BaseDrawSprite11> spriteCreater = nullptr;
+			ChPtr::Shared<Sprite11>sprite = nullptr;
 		};
 	}
 }

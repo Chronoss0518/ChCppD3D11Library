@@ -10,6 +10,8 @@
 
 #include"../../ChFrameComponent/ChFrameComponent11.h"
 
+#include"../../ChSprite/ChSprite11.h"
+#include"../SpriteShader/ChBaseDrawSprite11.h"
 #include"ChBasicDrawMultipleMesh11.h"
 
 template<typename CharaType>
@@ -29,6 +31,12 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::Init(ID3D11Device* _de
 	SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	multiplePolygon.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
+
+	spriteCreater = ChPtr::Make_S<BaseDrawSprite11>();
+	spriteCreater->Init(_device);
+
+	sprite = ChPtr::Make_S<Sprite11>();
+	sprite->Init();
 }
 
 template<typename CharaType>
@@ -71,16 +79,21 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::InitPixelShader()
 }
 
 template<typename CharaType>
-void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model)
+void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(ID3D11DeviceContext* _dc, ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model)
 {
+	if (GetDevice() == nullptr)return;
+	if (IsDraw())return;
+
 	if (_model->GetComponent<MeshComponent>() != nullptr)return;
 
 	unsigned long maxFrameNo = 0;
 
 	std::vector<UseVertexs> vertexs;
 	std::vector<unsigned long> indexs;
+	std::array<Textures, CH_DMP_MAX_FRAME_COUNT> textures;
+	std::map<Ch3D::TextureType, ChMath::Vector2Base<unsigned int>>textureSizes;
 
-	CreateFrameMesh(_model, vertexs, indexs, maxFrameNo);
+	CreateFrameMesh(_model, vertexs, indexs, maxFrameNo, textures, textureSizes);
 
 	if (vertexs.size() <= 0)return;
 	if (indexs.size() <= 0)return;
@@ -98,6 +111,57 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(ChPtr:
 		&vertexs[0],
 		static_cast<unsigned long>(vertexs.size()));
 
+#if false
+
+	auto useDeffiuseTexture = ChPtr::Make_S<RenderTarget11>();
+
+	auto diffuseTextureMaxSize = textureSizes[Ch3D::TextureType::Diffuse];
+
+	useDeffiuseTexture->CreateRenderTarget(GetDevice(), diffuseTextureMaxSize.w, diffuseTextureMaxSize.h);
+
+	ID3D11RenderTargetView* baseRT;
+	ID3D11DepthStencilView* baseDS;
+
+	_dc->OMGetRenderTargets(1, &baseRT, &baseDS);
+
+	useDeffiuseTexture->SetRenderTarget(_dc, nullptr);
+
+	float moveSize = 1.0f / CH_DMP_MAX_FRAME_COUNT;
+
+	float startPos = moveSize;
+	startPos *= 2.0f;
+	startPos -= 1.0f;
+
+	moveSize *= 2.0f;
+
+	ChVec4 rect = ChVec4::FromRect(-1.0f,1.0f, startPos,-1.0f);
+
+	spriteCreater->DrawStart(_dc);
+
+	for (unsigned long i = 0; i < CH_DMP_MAX_FRAME_COUNT; i++)
+	{
+		sprite->SetPosRect(rect);
+
+		TextureBase11* tex = &GetWhiteTexture();
+
+		auto it = textures[i].texture.find(Ch3D::TextureType::Diffuse);
+		if (it != textures[i].texture.end())
+			tex = it->second;
+
+		spriteCreater->Draw(*tex, *sprite);
+
+		rect.left += moveSize;
+		rect.right += moveSize;
+	}
+
+	spriteCreater->DrawEnd();
+
+	meshCom->useDeffiuseTexture = useDeffiuseTexture;
+
+	_dc->OMSetRenderTargets(1, &baseRT, baseDS);
+
+#endif
+
 }
 
 template<typename CharaType>
@@ -105,16 +169,18 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameMesh(
 	ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 	std::vector<UseVertexs>& _vertexs,
 	std::vector<unsigned long>& _indexs,
-	unsigned long& _maxFrameNo)
+	unsigned long& _maxFrameNo,
+	std::array<Textures, CH_DMP_MAX_FRAME_COUNT>& _textures,
+	std::map<Ch3D::TextureType, ChMath::Vector2Base<unsigned int>>& _textureSize)
 {
 
-	CreateFrameData(_model, _vertexs, _indexs, _maxFrameNo);
+	CreateFrameData(_model, _vertexs, _indexs, _maxFrameNo, _textures, _textureSize);
 
 	for (auto&& child : _model->GetChildlen<ChCpp::FrameObject<CharaType>>())
 	{
 		if (child.expired())continue;
 
-		CreateFrameMesh(child.lock(), _vertexs, _indexs, _maxFrameNo);
+		CreateFrameMesh(child.lock(), _vertexs, _indexs, _maxFrameNo, _textures, _textureSize);
 	}
 
 }
@@ -124,7 +190,9 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
 	ChPtr::Shared<ChCpp::FrameObject<CharaType>>_model,
 	std::vector<UseVertexs>& _vertexs,
 	std::vector<unsigned long>& _indexs,
-	unsigned long& _maxFrameNo)
+	unsigned long& _maxFrameNo,
+	std::array<Textures, CH_DMP_MAX_FRAME_COUNT>& _textures,
+	std::map<Ch3D::TextureType, ChMath::Vector2Base<unsigned int>>& _textureSize)
 {
 	auto&& frameCom = _model->GetComponent<ChCpp::FrameComponent<CharaType>>();
 	if (frameCom == nullptr)return;
@@ -148,6 +216,11 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
 		auto prim = ChPtr::Make_S<FrameComponent::PrimitiveData>();
 		prim->mate = materials[i];
 
+		prim->drawFlg = true;
+
+		prim->frameNo = _maxFrameNo;
+		_maxFrameNo++;
+
 		for (unsigned char i = 0; i < ChStd::EnumCast(Ch3D::TextureType::None); i++)
 		{
 			Ch3D::TextureType type = static_cast<Ch3D::TextureType>(i);
@@ -161,11 +234,18 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::CreateFrameData(
 
 			if (!texture->IsTex())texture = nullptr;
 			prim->textures[type] = texture;
+
+			ChMath::Vector2Base<unsigned int> size = texture->GetTextureSize();
+			auto textureMaxSize = _textureSize[type];
+
+			textureMaxSize.w = textureMaxSize.w < size.w ? size.w : textureMaxSize.w;
+			textureMaxSize.h = textureMaxSize.h < size.h ? size.h : textureMaxSize.h;
+
+			_textureSize[type].val.Set(textureMaxSize.val);
+			_textures[prim->frameNo].texture[type] = texture.get();
 		}
 
 
-		prim->frameNo = _maxFrameNo;
-		_maxFrameNo++;
 
 		createFrameCom->primitives.push_back(prim);
 	}
@@ -250,6 +330,7 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::DrawStart(ID3D11Device
 {
 	if (!IsInit())return;
 	if (IsDraw())return;
+	if (ChPtr::NullCheck(_dc))return;
 
 	SamplePolygonShaderBase11::DrawStart(_dc);
 	if (alphaBlendFlg)
@@ -280,12 +361,14 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::Draw(
 	multiplePolygon.SetWorldMatrix(_mat);
 
 	_mesh.UpdateDrawTransform();
+
 	DrawUpdate(_mesh);
 
 	multiplePolygon.SetShaderModelData(GetDC());
 	multiplePolygon.SetShaderMaterialData(GetDC());
 	multiplePolygon.SetShaderFrameData(GetDC());
 	multiplePolygon.SetShaderTexture(GetDC());
+
 
 	GetDC()->DrawIndexedInstanced(static_cast<unsigned int>(meshCom->indexNum), 1, 0, 0, 0);
 
@@ -356,6 +439,7 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::DrawMain(ChCpp::FrameO
 		multiplePolygon.SetDrwaFlags(prim->drawFlg, prim->frameNo);
 
 		multiplePolygon.SetBaseTexture(prim->textures[Ch3D::TextureType::Diffuse].get(), prim->frameNo);
+		//multiplePolygon.SetBaseTexture(&GetWhiteTexture());
 	}
 }
 
