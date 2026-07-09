@@ -17,6 +17,8 @@ namespace ChD3D11
 
 			void SetShaderTexture(ID3D11DeviceContext* _dc, TextureBase11*  _tex, TextureBase11& _defaultTex, const unsigned long _registerNo);
 
+			void SetShaderTextures(ID3D11DeviceContext* _dc, std::vector<TextureBase11*>& _texs, TextureBase11& _defaultTex, const unsigned long _registerNo);
+
 			inline ID3D11Device* GetDevice() { return device; };
 
 		private:

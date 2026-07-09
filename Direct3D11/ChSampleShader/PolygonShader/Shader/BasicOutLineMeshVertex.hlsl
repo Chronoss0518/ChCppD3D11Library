@@ -25,8 +25,8 @@ VS_OUT main
     VS_OUT res;
     
     float4x4 tmpMat = _blendNum > 0 ?
-		mul(charaDatas.frameMatrix, BlendMatrix(_blendPow, _blendNum)) :
-		charaDatas.frameMatrix;
+		mul(frameData.frameMatrix, BlendMatrix(_blendPow, _blendNum)) :
+		frameData.frameMatrix;
 	
     MTWStruct tmp = ModelToWorld(GetOutLinePos(_pos,_normal), _uv, _normal, _faceNormal, tmpMat);
     

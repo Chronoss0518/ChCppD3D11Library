@@ -31,7 +31,7 @@ namespace ChD3D11
 
 			void SetLiteBlurFlg(const bool _flg);
 
-			void SetBlurData(const ChS_Blur& _data);
+			void SetBlurData(const ChBlurData& _data);
 
 			void SetPSSpriteData(ID3D11DeviceContext* _dc);
 
@@ -41,7 +41,7 @@ namespace ChD3D11
 
 		public://Get Functions//
 
-			inline ChS_Blur GetBlurData() { return blurData; }
+			inline ChBlurData GetBlurData() { return blurData; }
 
 			inline ChVec2 GetGameWindowSize() { return blurData.windowSize; }
 
@@ -55,8 +55,8 @@ namespace ChD3D11
 
 		private://Member Values//
 
-			ChS_Blur blurData;
-			ConstantBuffer11<ChS_Blur> blurBuf;
+			ChBlurData blurData;
+			ConstantBuffer11<ChBlurData> blurBuf;
 			bool updateFlg = true;
 
 		};

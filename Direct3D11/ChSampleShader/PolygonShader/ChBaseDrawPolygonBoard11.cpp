@@ -20,7 +20,7 @@ void BaseDrawPolygonBoard11::Init(ID3D11Device* _device)
 {
 	if (IsInit())return;
 
-	SamplePolygonShaderBase11::Init(_device);
+	SamplePolygonShaderUseDrawPolygonBase11::Init(_device);
 
 	vertexBuffer.CreateBuffer(_device, drawVertexs, 3);
 	unsigned long indexs[3] = { 0,1,2 };
@@ -31,7 +31,7 @@ void BaseDrawPolygonBoard11::Release()
 {
 	if (!IsInit())return;
 
-	SamplePolygonShaderBase11::Release();
+	SamplePolygonShaderUseDrawPolygonBase11::Release();
 	vertexBuffer.Release();
 	indexBuffer.Release();
 }
@@ -48,14 +48,14 @@ void BaseDrawPolygonBoard11::InitVertexShader()
 	decl[2] = { "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
 	decl[3] = { "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
 
-	SamplePolygonShaderBase11::CreateVertexShader(decl, sizeof(decl) / sizeof(D3D11_INPUT_ELEMENT_DESC), main, sizeof(main));
+	SamplePolygonShaderUseDrawPolygonBase11::CreateVertexShader(decl, sizeof(decl) / sizeof(D3D11_INPUT_ELEMENT_DESC), main, sizeof(main));
 }
 
 void BaseDrawPolygonBoard11::InitPixelShader()
 {
 #include"../PolygonShader/BasePolygonPixcel.inc"
 
-	SamplePolygonShaderBase11::CreatePixelShader(main, sizeof(main));
+	SamplePolygonShaderUseDrawPolygonBase11::CreatePixelShader(main, sizeof(main));
 }
 
 void BaseDrawPolygonBoard11::DrawStart(ID3D11DeviceContext* _dc)
@@ -63,7 +63,7 @@ void BaseDrawPolygonBoard11::DrawStart(ID3D11DeviceContext* _dc)
 	if (!IsInit())return;
 	if (IsDraw())return;
 
-	SamplePolygonShaderBase11::DrawStart(_dc);
+	SamplePolygonShaderUseDrawPolygonBase11::DrawStart(_dc);
 
 	SetShaderDrawData(_dc);
 }
@@ -78,9 +78,10 @@ void BaseDrawPolygonBoard11::Draw(
 	if (_polygon.GetVertexSize() < 3)return;
 
 	polyData.SetWorldMatrix(_mat);
-	polyData.SetFrameMatrix(ChLMat());
+	polyData.SetShaderModelData(GetDC());
 
-	polyData.SetShaderCharaData(GetDC());
+	polyData.SetFrameMatrix(ChLMat());
+	polyData.SetShaderFrameData(GetDC());
 
 	auto mate = _polygon.GetMaterial();
 
@@ -102,7 +103,7 @@ void BaseDrawPolygonBoard11::Draw(
 
 	if (alphaBlendFlg)
 	{
-		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
+		SamplePolygonShaderUseDrawPolygonBase11::SetShaderBlender(GetDC());
 	}
 
 	for (unsigned long i = 1; i < _polygon.GetVertexSize() - 1; i++)
@@ -121,7 +122,7 @@ void BaseDrawPolygonBoard11::Draw(
 
 	if (alphaBlendFlg)
 	{
-		SamplePolygonShaderBase11::SetShaderDefaultBlender(GetDC());
+		SamplePolygonShaderUseDrawPolygonBase11::SetShaderDefaultBlender(GetDC());
 	}
 }
 
@@ -129,5 +130,5 @@ void BaseDrawPolygonBoard11::Update(ID3D11DeviceContext* _dc)
 {
 	if (!updateFlg)return;
 
-	SamplePolygonShaderBase11::Update(_dc);
+	SamplePolygonShaderUseDrawPolygonBase11::Update(_dc);
 }

@@ -1,10 +1,11 @@
 #include<Windows.h>
+#include<array>
 #include"../../../../ChCppBaseLibrary/BaseIncluder/ChBase.h"
 #include"../../../BaseIncluder/ChD3D11I.h"
 
 #include"../../../../ChCppBaseLibrary/CPP/ChModel/ChModelObject.h"
 
-#include"../../ChMesh/ChMesh11.h"
+#include"../../ChFrameComponent/ChFrameComponent11.h"
 
 #include"ChBasicOutLineMesh11.h"
 
@@ -21,13 +22,12 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Init(ID3D11Device* _device)
 {
 	if (IsInit())return;
 
-	SamplePolygonShaderBase11::Init(_device);
+	SamplePolygonShaderUseDrawPolygonBase11::Init(_device);
 
 	SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	SetCullMode(D3D11_CULL_FRONT);
 
-	polyData.Init(_device, &GetWhiteTexture(), &GetNormalTexture());
 	boneData.Init(_device);
 	outLineData.Init(_device);
 }
@@ -35,8 +35,7 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Init(ID3D11Device* _device)
 template<typename CharaType>
 void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Release()
 {
-	SamplePolygonShaderBase11::Release();
-	polyData.Release();
+	SamplePolygonShaderUseDrawPolygonBase11::Release();
 	boneData.Release();
 	outLineData.Release();
 }
@@ -47,20 +46,11 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::InitVertexShader()
 
 #include"../PolygonShader/BasicOutLineMeshVertex.inc"
 
-	D3D11_INPUT_ELEMENT_DESC decl[10];
+	std::array<D3D11_INPUT_ELEMENT_DESC, 10>decl;
 
-	decl[0] = { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,0, 0, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[1] = { "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[2] = { "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[3] = { "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[4] = { "NORMAL",  1, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[5] = { "BLENDINDEX",  0, DXGI_FORMAT_R32_UINT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[6] = { "BLENDWEIGHT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[7] = { "BLENDWEIGHT",  1, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[8] = { "BLENDWEIGHT",  2, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
-	decl[9] = { "BLENDWEIGHT",  3, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA };
+	FrameComponent11<CharaType>::CreateInputElements(decl);
 
-	SamplePolygonShaderBase11::CreateVertexShader(decl, sizeof(decl) / sizeof(D3D11_INPUT_ELEMENT_DESC), main, sizeof(main));
+	SamplePolygonShaderUseDrawPolygonBase11::CreateVertexShader(&decl[0], decl.size(), main, sizeof(main));
 }
 
 template<typename CharaType>
@@ -68,7 +58,13 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::InitPixelShader()
 {
 #include"../PolygonShader/BasicOutLineMeshPixcel.inc"
 
-	SamplePolygonShaderBase11::CreatePixelShader(main, sizeof(main));
+	SamplePolygonShaderUseDrawPolygonBase11::CreatePixelShader(main, sizeof(main));
+}
+
+template<typename CharaType>
+void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::CreateFrameMesh(ChPtr::Shared<ChCpp::TransformObject<CharaType>>_model)
+{
+	FrameComponent11<CharaType>::CreateFrameMesh(GetDevice(), _model);
 }
 
 template<typename CharaType>
@@ -101,30 +97,31 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawStart(ID3D11DeviceConte
 	if (!IsInit())return;
 	if (IsDraw())return;
 
-	SamplePolygonShaderBase11::DrawStart(_dc);
+	SamplePolygonShaderUseDrawPolygonBase11::DrawStart(_dc);
 	if (alphaBlendFlg)
-		SamplePolygonShaderBase11::SetShaderBlender(GetDC());
+		SamplePolygonShaderUseDrawPolygonBase11::SetShaderBlender(GetDC());
 
 }
 
 template<typename CharaType>
 void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Draw(
-	Mesh11<CharaType>& _mesh,
+	ChCpp::FrameObject<CharaType>& _mesh,
 	const ChLMat& _mat)
 {
 	if (!IsInit())return;
 	if (!IsDraw())return;
 	if (ChPtr::NullCheck(GetDC()))return;
 
-	if (outLineData.GetOutLineColor().a <= polyData.GetCharaData().alphaTestValue)return;
+	if (outLineData.GetOutLineColor().a <= polyData.GetDrawData().alphaTestValue)return;
 	if (outLineData.GetWidth() <= MIN_WIDTH)return;
 
 	polyData.SetWorldMatrix(_mat);
+	polyData.SetShaderModelData(GetDC());
+
 	outLineData.SetShaderDrawData(GetDC());
 
-	ChCpp::FrameObject<CharaType>& frame = _mesh;
-	frame.UpdateFunction();
-	DrawUpdate(frame);
+	_mesh.UpdateDrawTransform();
+	DrawUpdate(_mesh);
 
 }
 
@@ -166,6 +163,8 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawUpdate(ChCpp::FrameObje
 template<typename CharaType>
 void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawMain(ChCpp::FrameObject<CharaType>& _object)
 {
+	_object.UpdateDrawTransform();
+
 	auto&& frameCom = _object.GetComponent<ChD3D11::FrameComponent11<CharaType>>();
 
 	if (frameCom == nullptr)return;
@@ -191,7 +190,7 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawMain(ChCpp::FrameObject
 
 		polyData.SetFrameMatrix(drawMatrix);
 
-		polyData.SetVSCharaData(GetDC());
+		polyData.SetVSFrameData(GetDC());
 
 		frameCom->SetBoneData(boneData);
 
@@ -210,15 +209,15 @@ void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawMain(ChCpp::FrameObject
 template<typename CharaType>
 void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::DrawEnd()
 {
-	SamplePolygonShaderBase11::SetShaderDefaultBlender(GetDC());
-	SamplePolygonShaderBase11::DrawEnd();
+	SamplePolygonShaderUseDrawPolygonBase11::SetShaderDefaultBlender(GetDC());
+	SamplePolygonShaderUseDrawPolygonBase11::DrawEnd();
 }
 
 template<typename CharaType>
 void ChD3D11::Shader::BasicOutLineMesh11<CharaType>::Update(ID3D11DeviceContext* _dc)
 {
 	if (!updateFlg)return;
-	SamplePolygonShaderBase11::Update(_dc);
+	SamplePolygonShaderUseDrawPolygonBase11::Update(_dc);
 	updateFlg = false;
 }
 

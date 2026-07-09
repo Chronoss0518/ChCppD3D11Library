@@ -8,7 +8,7 @@
 #endif
 
 #ifdef __SHADER__
-cbuffer BasicShapesCircleData : register(CHANGE_CBUFFER(BASIC_SHAPES_CIRCLE_DATA_REGISTERNO))
+cbuffer BasicShapesCircleData : register(CH_CHANGE_CBUFFER(BASIC_SHAPES_CIRCLE_DATA_REGISTERNO))
 #else
 struct BasicShapesCircleData
 #endif

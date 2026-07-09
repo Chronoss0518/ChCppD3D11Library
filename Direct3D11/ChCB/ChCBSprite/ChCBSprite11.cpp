@@ -19,7 +19,7 @@ void CBSprite11::Init(
 
 	CBBase11::Init(_device);
 
-	spBuf.CreateBuffer(GetDevice(), SPRITE_DATA_REGISTERNO);
+	spBuf.CreateBuffer(GetDevice(), CH_DS_SPRITE_DATA_REGISTERNO);
 	defaultBase = _defaultBase;
 	SetInitFlg(true);
 }
@@ -45,7 +45,7 @@ void CBSprite11::SetBaseColor(const ChVec4& _color)
 	sUpdateFlg = true;
 }
 
-void CBSprite11::SetSpriteData(const ChS_SpriteData& _data)
+void CBSprite11::SetSpriteData(const ChSpriteData& _data)
 {
 	spData = _data;
 	sUpdateFlg = true;
@@ -79,7 +79,7 @@ void CBSprite11::SetShaderTexture(ID3D11DeviceContext* _dc)
 {
 	if (!*this)return;
 
-	CBBase11::SetShaderTexture(_dc, baseTex, *defaultBase, BASE_TEXTURE_REGISTER);
+	CBBase11::SetShaderTexture(_dc, baseTex, *defaultBase, CH_BT_BASE_TEXTURE_REGISTER);
 }
 
 void CBSprite11::UpdateSD(ID3D11DeviceContext* _dc)

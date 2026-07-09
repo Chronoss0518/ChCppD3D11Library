@@ -11,7 +11,7 @@
 float4 main(VS_OUT _in) : SV_Target0
 {
     float4 res = _in.color;
-    res *= Blur(_in.uv) * baseColor;
+    res *= Blur(_in.uv) * spriteData.baseColor;
 
     AlphaTest(res.a);
     

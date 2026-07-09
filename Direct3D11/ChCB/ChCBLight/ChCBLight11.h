@@ -83,7 +83,7 @@ namespace ChD3D11
 
 			inline ChPointLight GetPointLightData(const unsigned long _no)
 			{
-				if (_no >= LIGHT_PLIGHTCOUNT)return ChPointLight();
+				if (_no >= CH_L_LIGHT_PLIGHTCOUNT)return ChPointLight();
 				return lightDatas.pLight[_no];
 			}
 

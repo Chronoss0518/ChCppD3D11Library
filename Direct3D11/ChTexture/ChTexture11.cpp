@@ -135,7 +135,7 @@ void TextureBase11::SetDrawData(ID3D11DeviceContext* _dc, unsigned int _textureN
 	if (_samplerList.empty())return;
 
 	_dc->PSSetShaderResources(_textureNo, _textureList.size(), &_textureList[0]);
-	_dc->PSSetSamplers(_textureNo, _samplerList.size(), &_samplerList[0]);
+	_dc->PSSetSamplers(_textureNo, 1, &_samplerList[0]);
 }
 
 D3D11_TEXTURE2D_DESC TextureBase11::GetTextureDesc()

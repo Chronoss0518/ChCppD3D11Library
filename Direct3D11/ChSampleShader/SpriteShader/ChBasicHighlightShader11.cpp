@@ -113,7 +113,7 @@ void BasicHighlightShader11::Draw(
 
 	highlightMapData.SetPSSpriteData(GetDC());
 
-	GetDC()->PSSetSamplers(HIGHLIGHT_SAMPLER_REGISTERNO, 1, &sampler);
+	GetDC()->PSSetSamplers(CH_BT_BASE_TEXTURE_REGISTER, 1, &sampler);
 
 	unsigned int offsets = 0;
 

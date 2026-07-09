@@ -2,9 +2,9 @@
 #define __SHADER__
 #define _SM5_0_
 
-#include"PolygonBase.hlsli"
+#include"MultiplePolygonBase.hlsli"
 
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawMultiplePolygon.hlsli"
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Light.hlsli"
 #include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/Texture/BaseTexture.hlsli"
 
@@ -16,7 +16,7 @@ float4 PLightCol(ChPointLight _plight, VS_OUT _base, float4 _color);
 
 struct OutColor
 {
-	float4 color :SV_Target0;
+    float4 color : SV_Target0;
     float4 highLight : SV_Target1;
 	
 #if DebugFlgs
@@ -34,9 +34,9 @@ OutColor main(VS_OUT _in)
 	//ƒJƒƒ‰‚Ì‘O•û‚É‚ ‚é‚©‚Ì”»’è//
     clip(_in.viewPos.z);
 	
-	FrustumCulling(_in.proPos);
+    FrustumCulling(_in.proPos);
 	
-	OutColor outColor;
+    OutColor outColor;
 
 #if DebugFlgs
 
@@ -69,15 +69,17 @@ OutColor main(VS_OUT _in)
 
 #else
 
-	outColor.color = _in.color;
+    outColor.color = _in.color;
 
-	float4 baseTexCol = GetBaseTextureColor(_in.uv);
+    _in.uv = GetUV(_in.uv, _in.frameNo);
 	
-    outColor.highLight = outColor.color = mateData.dif * baseTexCol * outColor.color;
+    float4 baseTexCol = GetBaseTextureColor(_in.uv);
+	
+    outColor.highLight = outColor.color = mateDatas.datas[_in.frameNo].dif * baseTexCol * outColor.color;
 	
     AlphaTest(outColor.color.a);
 	
-    outColor.color.rgb = GetLightColor(outColor.color, _in, mateData);
+    outColor.color.rgb = GetLightColor(outColor.color, _in, mateDatas.datas[_in.frameNo]);
 	
     outColor.highLight.r = max(max(outColor.highLight.r, outColor.color.r) - 1.0f, 0.0f);
     outColor.highLight.g = max(max(outColor.highLight.g, outColor.color.g) - 1.0f, 0.0f);
@@ -87,93 +89,20 @@ OutColor main(VS_OUT _in)
 	
 #endif
 
-	return outColor;
+    return outColor;
 
 }
-
 
 float3 GetLightColor(float4 _baseColor, VS_OUT _inVertex, ChMaterialData _mate)
 {
 
-	L_BaseColor lightCol;
-	lightCol.color = _baseColor.rgb;
-	lightCol.wPos = _inVertex.worldPos.xyz;
-	lightCol.wfNormal = _inVertex.faceNormal;
-	lightCol.specular.rgb = _mate.speCol;
-	lightCol.specular.a = _mate.spePow;
+    L_BaseColor lightCol;
+    lightCol.color = _baseColor.rgb;
+    lightCol.wPos = _inVertex.worldPos.xyz;
+    lightCol.wfNormal = _inVertex.faceNormal;
+    lightCol.specular.rgb = _mate.speCol;
+    lightCol.specular.a = _mate.spePow;
 
     return GetLightColor(lightCol);
 
 }
-
-/*
-float4 LightCol(VS_OUT _Base, float4 _Color)
-{
-
-	float4 Col = _Color;
-
-	if(!light.LightUseFlg)return Col;
-
-	float Dot;
-
-	float3 BNormal = normalize(_Base.FaceNormal);
-	float3 LNormal = normalize(-light.Dir);
-
-	Dot = dot(BNormal, LNormal);
-
-	Dot = (Dot + 1) * 0.5f;
-	//Dot = saturate(Dot);
-
-	float TmpPow = LightPowMap.Sample(LightSmp, float2(Dot, 0.0f)).r;
-	
-	//float TmpPow = Dot;
-
-	Col.rgb *= LamLightCol(light.Dif, TmpPow) + AmbLightCol();
-
-	Col.rgb += SpeLightCol(-light.Dir, _Base.UsePos.xyz, _Base.FaceNormal,SpeCol);
-
-	//Col.rgb += AmbLightCol();
-
-	return Col;
-}
-
-float4 PLightCol(ChPointLight plight, VS_OUT _Base, float4 _Color)
-{
-
-	float4 Col = _Color;
-
-	if (!light.LightUseFlg)return Col;
-	if (!plight.Flg)return Col;
-
-	bool TmpFlg = false;
-
-	float3 TmpVec = _Base.UsePos.xyz;
-
-	TmpVec = TmpVec - plight.Pos;
-
-	float Len;
-
-	Len = length(TmpVec);
-
-	TmpFlg = Len > plight.Len ? true : false;
-
-	if (TmpFlg)return Col;
-
-	TmpVec = normalize(TmpVec);
-
-	float Par = Len / plight.Len;
-
-	float Dot;
-
-	Dot = dot(_Base.Normal, -TmpVec);
-
-	Dot = saturate(Dot);
-
-	Col.rgb *= LamLightCol(plight.Dif.rgb, Dot) * Par;
-
-	Col.rgb += SpeLightCol(TmpVec, _Base.UsePos.xyz, _Base.Normal,SpeCol) * Par;
-
-	return Col;
-}
-
-*/

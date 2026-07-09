@@ -13,7 +13,7 @@ void CBBone11::Init(ID3D11Device* _device)
 	Release();
 
 	CBBase11::Init(_device);
-	buf.CreateBuffer(_device, BONE_DATA_REGISTERNO);
+	buf.CreateBuffer(_device, CH_BB_BONE_DATA_REGISTERNO);
 	SetInitFlg(true);
 }
 
@@ -28,7 +28,7 @@ void CBBone11::Release()
 void CBBone11::SetBoneMatrix(const ChLMat& _offsetMat, const ChLMat& _mat, const unsigned long _no)
 {
 	if (!*this)return;
-	if (_no >= BONE_MAX_NUM)return;
+	if (_no >= CH_BB_BONE_MAX_NUM)return;
 	if (bone.boneOffsetMat[_no] == _mat)return;
 
 	bone.boneOffsetMat[_no] = _offsetMat;

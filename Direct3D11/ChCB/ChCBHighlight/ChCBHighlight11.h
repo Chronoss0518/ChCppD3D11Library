@@ -31,7 +31,7 @@ namespace ChD3D11
 
 			void SetBoostPower(const float& _boostPower);
 
-			void SetBlurData(const ChS_HighLight& _data);
+			void SetBlurData(const ChHighLightData& _data);
 
 			void SetPSSpriteData(ID3D11DeviceContext* _dc);
 
@@ -41,7 +41,7 @@ namespace ChD3D11
 
 		public://Get Functions//
 
-			inline ChS_HighLight GetBlurData() { return blurData; }
+			inline ChHighLightData GetBlurData() { return blurData; }
 
 			inline ChVec2 GetGameWindowSize() { return blurData.windowSize; }
 
@@ -57,8 +57,8 @@ namespace ChD3D11
 
 		private://Member Value//
 
-			ChS_HighLight blurData;
-			ConstantBuffer11<ChS_HighLight> blurBuf;
+			ChHighLightData blurData;
+			ConstantBuffer11<ChHighLightData> blurBuf;
 			bool updateFlg = true;
 
 		};

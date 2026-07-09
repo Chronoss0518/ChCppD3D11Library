@@ -14,7 +14,7 @@ void CBBlur11::Init(
 	if (IsInit())return;
 
 	CBBase11::Init(_device);
-	blurBuf.CreateBuffer(GetDevice(), BLUR_DATA_REGISTERNO);
+	blurBuf.CreateBuffer(GetDevice(), CH_B_BLUR_DATA_REGISTERNO);
 	SetInitFlg(true);
 }
 
@@ -52,7 +52,7 @@ void CBBlur11::SetLiteBlurFlg(const bool _flg)
 	updateFlg = true;
 }
 
-void CBBlur11::SetBlurData(const ChS_Blur& _data)
+void CBBlur11::SetBlurData(const ChBlurData& _data)
 {
 	blurData = _data;
 	updateFlg = true;

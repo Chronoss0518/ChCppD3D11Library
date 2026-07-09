@@ -30,3 +30,17 @@ void CBBase11::SetShaderTexture(ID3D11DeviceContext* _dc, TextureBase11* _tex, T
 
 	tmpTex->SetDrawData(_dc, _registerNo);
 }
+
+void CBBase11::SetShaderTextures(ID3D11DeviceContext* _dc, std::vector<TextureBase11*>& _texs, TextureBase11& _defaultTex, const unsigned long _registerNo)
+{
+	if (ChPtr::NullCheck(_dc))return;
+
+	for (size_t i = 0; i < _texs.size(); i++)
+	{
+		if (_texs[i] != nullptr)continue;
+		_texs[i] = &_defaultTex;
+
+	}
+
+	TextureBase11::SetDrawData(_dc, _registerNo, _texs);
+}

@@ -14,7 +14,7 @@ void CBOutLine11::Init(
 	if (IsInit())return;
 
 	CBBase11::Init(_device);
-	outlineBuf.CreateBuffer(GetDevice(), OUTLINE_DATA_REGISTERNO);
+	outlineBuf.CreateBuffer(GetDevice(), CH_OL_OUTLINE_DATA_REGISTERNO);
 	SetInitFlg(true);
 }
 

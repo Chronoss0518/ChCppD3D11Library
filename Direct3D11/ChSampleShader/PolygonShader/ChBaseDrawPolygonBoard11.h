@@ -1,7 +1,7 @@
 #ifndef Ch_D3D11_SS_BasePoBo_h
 #define Ch_D3D11_SS_BasePoBo_h
 
-#include"ChSamplePolygonShaderBase11.h"
+#include"ChSamplePolygonShaderUseDrawPolygonBase11.h"
 
 namespace ChD3D11
 {
@@ -10,7 +10,7 @@ namespace ChD3D11
 	namespace Shader
 	{
 
-		class BaseDrawPolygonBoard11 final :public SamplePolygonShaderBase11
+		class BaseDrawPolygonBoard11 final :public SamplePolygonShaderUseDrawPolygonBase11
 		{
 		public://Constructor Destructor//
 
