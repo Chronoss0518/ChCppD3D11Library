@@ -2,11 +2,10 @@
 #define __SHADER__
 #define _SM5_0_
 
-#include"PolygonBase.hlsli"
+#include"PostProcessOutLine.hlsli"
 
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/BoneBlending.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/OutLine.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawSprite.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/PostProcessOutLine.hlsli"
 
 //頂点シェーダ(VertexShader)//
 //通常描画//
@@ -27,8 +26,23 @@ VS_OUT main
     float4x4 tmpMat = _blendNum > 0 ?
 		mul(frameData.frameMatrix, BlendMatrix(_blendPow, _blendNum)) :
 		frameData.frameMatrix;
+
+#if 0
+    float4x4 scaleMat = float4x4(
+		1.0f + width, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f + width, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f + width, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+    
+    tmpMat = mul(scaleMat, tmpMat);
 	
-    MTWStruct tmp = ModelToWorld(GetOutLinePos(_pos,_normal), _uv, _normal, _faceNormal, tmpMat);
+    MTWStruct tmp = ModelToWorld(_pos, _uv, _normal, _faceNormal, tmpMat);
+
+#else
+    
+    MTWStruct tmp = ModelToWorld(GetOutLinePos(_pos, _normal), _uv, _normal, _faceNormal, tmpMat);
+
+#endif
     
     res.vertexNormal = tmp.vertexNormal;
     res.faceNormal = tmp.faceNormal;

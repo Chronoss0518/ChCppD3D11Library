@@ -2,10 +2,10 @@
 #define __SHADER__
 #define _SM5_0_
 
-#include"PolygonBase.hlsli"
+#include"PostProcessOutLine.hlsli"
 
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawPolygon.hlsli"
-#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/OutLine.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/DrawSprite.hlsli"
+#include"../../../../../ChCppDirect3DLibrary/ShaderHeaderFiles/PostProcessOutLine.hlsli"
 
 //ピクセルシェダ(PixelShader)//
 //通常描画//
