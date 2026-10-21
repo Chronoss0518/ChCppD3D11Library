@@ -12,7 +12,7 @@ void main(
 	inout TriangleStream<VS_OUT> output
 )
 {
-    //if (!IsDrawFlags(input[0].frameNo))return;
+    if (!IsDrawFlags(input[0].frameNo))return;
 	
 	for (uint i = 0; i < 3; i++)
 	{
