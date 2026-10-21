@@ -29,7 +29,7 @@ namespace ChD3D11
 			void Release()override;
 
 		protected://Init And Release//
-
+			
 			void InitVertexShader()override;
 
 			void InitPixelShader()override;
@@ -72,6 +72,9 @@ namespace ChD3D11
 
 			CB::CBBone11 boneData;
 			CB::CBOutLine11 outLineData;
+
+			ChPtr::Shared<RenderTarget11>useRenderTarget = nullptr;
+			
 		};
 	}
 }

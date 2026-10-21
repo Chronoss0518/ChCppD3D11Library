@@ -67,7 +67,7 @@ void ChD3D11::Shader::BasicDrawMultipleMesh11<CharaType>::InitGeometryShader()
 {
 #include"../PolygonShader/BasicMultipleDrawMeshGeometry.inc"
 
-	//SamplePolygonShaderBase11::CreateGeometryShader(main, sizeof(main));
+	SamplePolygonShaderBase11::CreateGeometryShader(main, sizeof(main));
 }
 
 template<typename CharaType>

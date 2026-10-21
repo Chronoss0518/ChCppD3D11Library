@@ -11,7 +11,7 @@ struct VS_OUT
     float4 viewPos : POSITION1;
     float4 proPos : POSITION2;
     float2 uv : TEXCOORD0;
-    uint frameNo : TEXCOORD1;
+    uint frameNo : BLENDINDICES0;
 };
 
 #endif
